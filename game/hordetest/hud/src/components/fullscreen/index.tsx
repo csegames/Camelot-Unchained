@@ -13,6 +13,7 @@ import { ChampionSelect } from './ChampionSelect';
 import { Button } from './Button';
 import { RightModal } from './RightModal';
 import { GameStats } from './GameStats';
+import { LeftModal } from './LeftModal';
 
 const Container = styled.div`
   position: fixed;
@@ -94,6 +95,7 @@ export class FullScreen extends React.Component<Props, State> {
             <Chat accessToken={game.accessToken} />
           </ChatPosition>
         }
+        <LeftModal />
         <RightModal />
       </Container>
     ) : <OpenFullScreenButton onClick={this.show}>Open Full Screen</OpenFullScreenButton>

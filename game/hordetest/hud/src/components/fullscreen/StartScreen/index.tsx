@@ -117,7 +117,7 @@ export function StartScreen(props: Props) {
     <Container>
       {renderRoute()}
       <TopSection>
-        <Hamburger />
+        <Hamburger onClick={() => game.trigger('show-left-modal', null)} />
         <NavMenu selectedRoute={selectedRoute} onSelectRoute={onSelectRoute} />
       </TopSection>
     </Container>

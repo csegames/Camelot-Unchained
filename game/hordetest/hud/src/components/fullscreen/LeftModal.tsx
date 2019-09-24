@@ -11,24 +11,24 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   bottom: 0;
-  right: -35%;
+  left: -35%;
   width: 35%;
   height: 100%;
-  background-image: url(../images/fullscreen/modal-right-bg.png);
-  background-size: cover;
-  transition: right 0.2s;
+  background-image: url(../images/fullscreen/modal-left-bg.png);
+  background-size: 100% 100%;
+  transition: left 0.2s;
 
   &.visible {
-    right: 0;
+    left: 0;
   }
 `;
 
 const ScreenOverlay = styled.div`
   position: fixed;
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
+  bottom: 0;
+  right: 0;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
   visibility: hidden;
@@ -56,7 +56,7 @@ export interface State {
   content: JSX.Element | JSX.Element[];
 }
 
-export class RightModal extends React.Component<Props, State> {
+export class LeftModal extends React.Component<Props, State> {
   private showHandle: EventHandle;
   private hideHandle: EventHandle;
   constructor(props: Props) {
@@ -82,8 +82,8 @@ export class RightModal extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    this.showHandle = game.on('show-right-modal', this.show);
-    this.hideHandle = game.on('hide-right-modal', this.hide);
+    this.showHandle = game.on('show-left-modal', this.show);
+    this.hideHandle = game.on('hide-left-modal', this.hide);
   }
 
   public componentWillUnmount() {
