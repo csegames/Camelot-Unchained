@@ -8,21 +8,18 @@ import React from 'react';
 import { styled } from '@csegames/linaria/react';
 
 interface ContainerProps extends React.HTMLProps<HTMLDivElement> {
-  screenPos: Vec2f;
   scale: number;
 }
 const Container = styled.div`
   position: absolute;
   display: flex;
   align-items: center;
-  top: ${(props: ContainerProps) => props.screenPos.y}px;
-  left: ${(props: ContainerProps) => props.screenPos.x}px;
-  transform: ${(props: ContainerProps) => props.scale}px;
+  transform: ${(props: ContainerProps) => 1 - props.scale}px;
 `;
 
 const Diamond = styled.div`
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
   opacity: 0.85;
   display: flex;
   align-items: center;
@@ -108,9 +105,59 @@ export function PlayerTracker(props: Props) {
   //   }
   // }
 
+  function getAlignment() {
+    const { screenPos } = props;
+
+    let xFlush = false;
+    let yFlush = false;
+
+    let left: string | number = 'auto';
+    let right: string | number = 'auto';
+    let top: string | number = 'auto';
+    let bottom: string | number = 'auto';
+    let transition = '';
+    if (screenPos.x < 0) {
+      left = 0;
+      xFlush = true;
+    }
+
+    if (screenPos.x > 1) {
+      right = 0;
+      xFlush = true;
+    }
+
+    if (screenPos.y < 0) {
+      top = 0;
+      yFlush = true;
+    }
+
+    if (screenPos.y > 1) {
+      bottom = 0;
+      yFlush = true;
+    }
+
+    if (!xFlush) {
+      left = `${screenPos.x * 100}%`;
+      // transition = 'left 0.1s';
+    }
+
+    if (!yFlush) {
+      top = `${screenPos.y * 100}%`;
+      // transition = transition + ', top 0.1s';
+    }
+
+    return {
+      top,
+      right,
+      bottom,
+      left,
+      transition,
+    };
+  }
+
   // const { alignment, styles } = getAlignment();
   return (
-    <Container scale={props.scale} screenPos={props.screenPos}>
+    <Container scale={props.scale} style={getAlignment()}>
       <Diamond color={props.color}></Diamond>
     </Container>
   );

@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { throttle } from 'lodash';
+// import { throttle } from 'lodash';
 import { styled } from '@csegames/linaria/react';
 import { PlayerTracker } from './PlayerTracker';
 
@@ -44,7 +44,7 @@ export class PlayerTrackers extends React.Component<Props, State> {
       colorAssignMap: {},
     };
 
-    this.handlePlayerDirectionUpdate = throttle(this.handlePlayerDirectionUpdate, 50);
+    // this.handlePlayerDirectionUpdate = throttle(this.handlePlayerDirectionUpdate, 50);
   }
 
   public render() {
