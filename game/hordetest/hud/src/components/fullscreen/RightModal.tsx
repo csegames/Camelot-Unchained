@@ -54,6 +54,7 @@ export interface Props {
 export interface State {
   isVisible: boolean;
   content: JSX.Element | JSX.Element[];
+  hideOverlay: boolean;
 }
 
 export class RightModal extends React.Component<Props, State> {
@@ -64,6 +65,7 @@ export class RightModal extends React.Component<Props, State> {
     this.state = {
       isVisible: false,
       content: null,
+      hideOverlay: false,
     };
   }
 
@@ -71,7 +73,7 @@ export class RightModal extends React.Component<Props, State> {
     const visibleClass = this.state.isVisible ? 'visible' : '';
     return (
       <>
-        <ScreenOverlay className={visibleClass} onClick={this.hide} />
+        {!this.state.hideOverlay && <ScreenOverlay className={visibleClass} onClick={this.hide} />}
         <Container className={visibleClass}>
           <ContentContainer>
             {this.state.content}
@@ -94,11 +96,11 @@ export class RightModal extends React.Component<Props, State> {
     this.hideHandle = null;
   }
 
-  private show = (content: JSX.Element | JSX.Element[]) => {
-    this.setState({ isVisible: true, content });
+  private show = (content: JSX.Element | JSX.Element[], hideOverlay?: boolean) => {
+    this.setState({ isVisible: true, content, hideOverlay });
   }
 
   private hide = () => {
-    this.setState({ isVisible: false, content: null });
+    this.setState({ isVisible: false, content: null, hideOverlay: false });
   }
 }

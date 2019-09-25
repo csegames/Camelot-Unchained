@@ -14,6 +14,7 @@ import { Button } from './Button';
 import { RightModal } from './RightModal';
 import { GameStats } from './GameStats';
 import { LeftModal } from './LeftModal';
+import { MenuModal } from './MenuModal';
 
 const Container = styled.div`
   position: fixed;
@@ -95,6 +96,7 @@ export class FullScreen extends React.Component<Props, State> {
             <Chat accessToken={game.accessToken} />
           </ChatPosition>
         }
+        <MenuModal />
         <LeftModal />
         <RightModal />
       </Container>

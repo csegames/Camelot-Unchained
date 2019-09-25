@@ -14,8 +14,6 @@ const Container = styled.div`
   left: -35%;
   width: 35%;
   height: 100%;
-  background-image: url(../images/fullscreen/modal-left-bg.png);
-  background-size: 100% 100%;
   transition: left 0.2s;
 
   &.visible {
@@ -46,6 +44,18 @@ const ContentContainer = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url(../images/fullscreen/modal-right-bg.png);
+    background-size: contain;
+    transform: scaleX(-1);
+  }
 `;
 
 export interface Props {
@@ -54,6 +64,7 @@ export interface Props {
 export interface State {
   isVisible: boolean;
   content: JSX.Element | JSX.Element[];
+  hideOverlay: boolean;
 }
 
 export class LeftModal extends React.Component<Props, State> {
@@ -64,6 +75,7 @@ export class LeftModal extends React.Component<Props, State> {
     this.state = {
       isVisible: false,
       content: null,
+      hideOverlay: false,
     };
   }
 
@@ -71,8 +83,8 @@ export class LeftModal extends React.Component<Props, State> {
     const visibleClass = this.state.isVisible ? 'visible' : '';
     return (
       <>
-        <ScreenOverlay className={visibleClass} onClick={this.hide} />
-        <Container className={visibleClass}>
+        {!this.state.hideOverlay && <ScreenOverlay className={visibleClass} onClick={this.hide} />}
+        <Container className={visibleClass} onClick={this.hide}>
           <ContentContainer>
             {this.state.content}
           </ContentContainer>
@@ -94,11 +106,11 @@ export class LeftModal extends React.Component<Props, State> {
     this.hideHandle = null;
   }
 
-  private show = (content: JSX.Element | JSX.Element[]) => {
-    this.setState({ isVisible: true, content });
+  private show = (content: JSX.Element | JSX.Element[], hideOverlay?: boolean) => {
+    this.setState({ isVisible: true, content, hideOverlay });
   }
 
   private hide = () => {
-    this.setState({ isVisible: false, content: null });
+    this.setState({ isVisible: false, content: null, hideOverlay: false });
   }
 }
