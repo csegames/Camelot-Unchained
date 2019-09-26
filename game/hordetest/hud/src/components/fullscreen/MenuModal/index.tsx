@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { styled } from '@csegames/linaria/react';
+import { LeftOptions } from './LeftOptions';
 
 const Container = styled.div`
   position: fixed;
@@ -52,7 +53,7 @@ export class MenuModal extends React.Component<{}, State> {
     this.setState({ isVisible: true });
 
     const hideOverlay = true;
-    game.trigger('show-left-modal', null, hideOverlay);
+    game.trigger('show-left-modal', <LeftOptions />, hideOverlay);
     game.trigger('show-right-modal', null, hideOverlay);
   }
 

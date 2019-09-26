@@ -38,12 +38,10 @@ const ScreenOverlay = styled.div`
   }
 `;
 
-const ContentContainer = styled.div`
+const ContentBackground = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
 
   &:before {
     content: '';
@@ -55,7 +53,17 @@ const ContentContainer = styled.div`
     background-image: url(../images/fullscreen/modal-right-bg.png);
     background-size: contain;
     transform: scaleX(-1);
+    z-index: 0;
   }
+`;
+
+const ContentContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
 `;
 
 export interface Props {
@@ -85,9 +93,11 @@ export class LeftModal extends React.Component<Props, State> {
       <>
         {!this.state.hideOverlay && <ScreenOverlay className={visibleClass} onClick={this.hide} />}
         <Container className={visibleClass} onClick={this.hide}>
-          <ContentContainer>
-            {this.state.content}
-          </ContentContainer>
+          <ContentBackground>
+            <ContentContainer>
+              {this.state.content}
+            </ContentContainer>
+          </ContentBackground>
         </Container>
       </>
     );
@@ -107,10 +117,13 @@ export class LeftModal extends React.Component<Props, State> {
   }
 
   private show = (content: JSX.Element | JSX.Element[], hideOverlay?: boolean) => {
+    console.log('SHOW LEFT MODAL');
+    console.log(content);
     this.setState({ isVisible: true, content, hideOverlay });
   }
 
   private hide = () => {
+    console.log('HIDE LEFT MODAL');
     this.setState({ isVisible: false, content: null, hideOverlay: false });
   }
 }
