@@ -14,7 +14,7 @@ const Container = styled.div`
   position: absolute;
   display: flex;
   align-items: center;
-  transform: ${(props: ContainerProps) => 1 - props.scale}px;
+  transform: ${(props: ContainerProps) => props.scale}px;
 `;
 
 const Diamond = styled.div`
