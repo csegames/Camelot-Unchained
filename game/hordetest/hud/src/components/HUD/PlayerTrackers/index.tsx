@@ -34,7 +34,7 @@ const colors = [
   '#d9d82d',
   '#c1b2bf',
   '#14820e',
-]
+];
 
 export class PlayerTrackers extends React.Component<Props, State> {
   private colorIndex: number = 0;

@@ -10,6 +10,7 @@ import { engineEvents } from 'lib/engineEvents';
 import { HealthBar } from './HealthBar';
 import { InteractionBar } from './InteractionBar';
 import { Interactable } from './Interactable';
+import { PlayerDifferentiator } from './PlayerDifferentiator';
 
 interface ContainerProps extends React.HTMLProps<HTMLDivElement> {
   worldUIState: WorldUIState;
@@ -104,6 +105,7 @@ export class WorldUI extends React.Component<{}, State> {
     engineEvents.onUpdateHealthBar(this.handleUpdateHealthBar);
     engineEvents.onUpdateInteractable(this.handleUpdateInteractable);
     engineEvents.onUpdateInteractionBar(this.handleUpdateInteractionBar);
+    engineEvents.onUpdatePlayerDifferentiator(this.handleUpdatePlayerDifferentiator);
   }
 
   private renderWorldUI = (worldUI: WorldUIType) => {
