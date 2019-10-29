@@ -12,6 +12,7 @@ import { Play } from './Play';
 import { ChampionProfile } from './ChampionProfile';
 import { Store } from './Store';
 import { BattlePass } from './BattlePass';
+import { CareerStats } from './CareerStats';
 
 const Container = styled.div`
   position: relative;
@@ -109,6 +110,14 @@ export function StartScreen(props: Props) {
         return (
           <GenericScreenContainer>
             <BattlePass />
+          </GenericScreenContainer>
+        );
+      }
+
+      case StartScreenRoute.Career: {
+        return (
+          <GenericScreenContainer>
+            <CareerStats />
           </GenericScreenContainer>
         );
       }
