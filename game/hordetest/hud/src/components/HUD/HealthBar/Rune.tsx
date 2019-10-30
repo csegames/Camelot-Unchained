@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { styled } from '@csegames/linaria/react';
+import { sendPlayerMessage } from '../PlayerMessage';
 
 const ANIMATION_DURATION = 2;
 
@@ -113,6 +114,7 @@ export class Rune extends React.Component<Props, State> {
 
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.value !== this.props.value) {
+      sendPlayerMessage('You picked up a ' + RuneType[this.props.runeType] + ' rune!');
       this.playUpdateAnimation();
     }
   }
