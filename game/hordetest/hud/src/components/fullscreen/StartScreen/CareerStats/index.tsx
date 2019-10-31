@@ -11,8 +11,8 @@ import { StatBlock } from './StatBlock';
 const Container = styled.div`
   display: flex;
   width: 80%;
-  height: 100%;
-  padding: 0 10%;
+  height: 80%;
+  padding: 20px 10% 0 10%;
 `;
 
 const StatBlockContainer = styled.div`

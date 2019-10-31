@@ -12,7 +12,34 @@ const Container = styled.div`
   flex: 1;
   min-width: calc(33% - 20px);
   margin: 10px;
-  background-color: rgba(27, 27, 27, 0.7);
+  background-color: rgba(74, 74, 74, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+`;
+
+const BestText = styled.div`
+  font-family: Colus;
+  font-size: 33px;
+  color: white;
+`;
+
+const NameText = styled.div`
+  font-family: Colus;
+  font-size: 16px;
+  color: #696969;
+`;
+
+const SecondaryStatContainer = styled.div`
+`;
+
+const SecondaryStatText = styled.div`
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 18px;
+  color: #5f5f5f;
 `;
 
 const IconContainer = styled.div`
@@ -24,6 +51,7 @@ const IconContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: -1;
 `;
 
 const IconClass = styled.div`
@@ -35,8 +63,8 @@ export interface Props {
   iconClass: string;
   name: string;
   best: number;
-  total: number;
   average: number;
+  total: number;
 }
 
 export function StatBlock(props: Props) {
@@ -45,6 +73,14 @@ export function StatBlock(props: Props) {
       <IconContainer>
         <IconClass className={props.iconClass} />
       </IconContainer>
+
+      <BestText>{props.best}</BestText>
+      <NameText>{props.name}</NameText>
+
+      <SecondaryStatContainer>
+        <SecondaryStatText>Average: {props.average}</SecondaryStatText>
+        <SecondaryStatText>Total: {props.total}</SecondaryStatText>
+      </SecondaryStatContainer>
     </Container>
   );
 }
