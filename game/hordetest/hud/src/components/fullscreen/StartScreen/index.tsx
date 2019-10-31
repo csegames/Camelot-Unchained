@@ -59,6 +59,17 @@ const GenericScreenContainer = styled.div`
   top: 93px;
 `;
 
+const FullScreenImage = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url(../images/fullscreen/fullscreen-image-bg.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
+
 export interface Props {
   onReady: () => void;
 }
@@ -117,6 +128,7 @@ export function StartScreen(props: Props) {
       case StartScreenRoute.Career: {
         return (
           <GenericScreenContainer>
+            <FullScreenImage />
             <CareerStats />
           </GenericScreenContainer>
         );
