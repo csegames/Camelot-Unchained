@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import { styled } from '@csegames/linaria/react';
 import { Dropdown } from '../../Dropdown';
+import { ListItem } from './ListItem';
 import { StatType, topPlayers } from './testData';
 
 const Container = styled.div`
@@ -23,51 +24,6 @@ const DropdownContainer = styled.div`
 const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const ListItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  height: 50px;
-`;
-
-const ItemLeftSection = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const RankText = styled.div`
-  font-family: Lato;
-  font-weight: bold;
-  color: white;
-  font-size: 12px;
-`;
-
-const ChampionImage = styled.img`
-  width: 25px;
-  height: 25px;
-  object-fit: contain;
-`;
-
-const UserName = styled.div`
-  font-family: Lato;
-  font-weight: bold;
-  color: white;
-  font-size: 18px;
-`;
-
-const ChampionName = styled.div`
-  font-family: Lato;
-  font-weight: bold;
-  font-size: 12px;
-  color: #6d6d6d;
-`;
-
-const StatValue = styled.div`
-  font-family: Lato;
-  font-weight: bold;
-  font-size: 18px;
-  color: white;
 `;
 
 export interface Props {
@@ -125,18 +81,7 @@ export function List() {
       <ListContainer>
         {sortedFilteredTopPlayers.map((topPlayer, i) => {
           return (
-            <ListItem>
-              <ItemLeftSection>
-                <RankText>{i + 1}</RankText>
-                <ChampionImage src={topPlayer.championInfo.iconUrl} />
-                <div>
-                  <UserName>{topPlayer.userName}</UserName>
-                  <ChampionName>{topPlayer.championInfo.name}</ChampionName>
-                </div>
-              </ItemLeftSection>
-
-              <StatValue>{topPlayer.statNumber}</StatValue>
-            </ListItem>
+            <ListItem player={topPlayer} rank={i + 1} />
           );
         })}
       </ListContainer>
