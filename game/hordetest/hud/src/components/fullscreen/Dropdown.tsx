@@ -49,7 +49,7 @@ export interface Props {
   selectedItem: string;
   items: string[];
   onSelectItem: (item: string) => void;
-  renderItem?: (item: string) => void;
+  formatItem?: (item: string) => string;
 }
 
 export function Dropdown(props: Props) {
@@ -68,7 +68,9 @@ export function Dropdown(props: Props) {
         <DropdownContainer>
           {props.items.map((item, i) => {
             return (
-              <Item key={i}>{item}</Item>
+              <Item key={i} onClick={() => props.onSelectItem(item)}>
+                {props.formatItem ? props.formatItem(item) : item}
+              </Item>
             );
           })}
         </DropdownContainer>

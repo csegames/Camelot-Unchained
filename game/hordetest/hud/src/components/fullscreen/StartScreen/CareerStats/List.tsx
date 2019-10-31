@@ -46,6 +46,28 @@ const RankText = styled.div`
 const ChampionImage = styled.img`
   width: 25px;
   height: 25px;
+  object-fit: contain;
+`;
+
+const UserName = styled.div`
+  font-family: Lato;
+  font-weight: bold;
+  color: white;
+  font-size: 18px;
+`;
+
+const ChampionName = styled.div`
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 12px;
+  color: #6d6d6d;
+`;
+
+const StatValue = styled.div`
+  font-family: Lato;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
 `;
 
 export interface Props {
@@ -57,7 +79,13 @@ const championDropdownItems = [
   'Berserker',
 ];
 
-const statDropdownItems = Object.keys(StatType);
+const statDropdownItems = [
+  StatType[StatType.Kills],
+  StatType[StatType.KillStreak],
+  StatType[StatType.LongestLife],
+  StatType[StatType.DamageTaken],
+  StatType[StatType.TotalDamage],
+];
 
 export function List() {
   const [selectedChampion, setSelectedChampion] = useState(championDropdownItems[0]);
@@ -78,7 +106,7 @@ export function List() {
   }
 
 
-  const sortedFilteredTopPlayers = getFilteredTopPlayers().sort((a, b) => a.statNumber - b.statNumber);
+  const sortedFilteredTopPlayers = getFilteredTopPlayers().sort((a, b) => b.statNumber - a.statNumber);
   return (
     <Container>
       <DropdownContainer>
@@ -91,6 +119,7 @@ export function List() {
           items={statDropdownItems}
           selectedItem={StatType[selectedStat]}
           onSelectItem={onSelectStat}
+          formatItem={item => item.toTitleCase()}
         />
       </DropdownContainer>
       <ListContainer>
@@ -100,7 +129,13 @@ export function List() {
               <ItemLeftSection>
                 <RankText>{i + 1}</RankText>
                 <ChampionImage src={topPlayer.championInfo.iconUrl} />
+                <div>
+                  <UserName>{topPlayer.userName}</UserName>
+                  <ChampionName>{topPlayer.championInfo.name}</ChampionName>
+                </div>
               </ItemLeftSection>
+
+              <StatValue>{topPlayer.statNumber}</StatValue>
             </ListItem>
           );
         })}

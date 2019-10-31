@@ -31,7 +31,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.Kills,
@@ -42,7 +42,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.Kills,
@@ -53,7 +53,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 3,
     statType: StatType.Kills,
@@ -64,7 +64,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 4,
     statType: StatType.Kills,
@@ -75,7 +75,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 5,
     statType: StatType.Kills,
@@ -86,7 +86,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 6,
     statType: StatType.Kills,
@@ -97,7 +97,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 7,
     statType: StatType.Kills,
@@ -108,7 +108,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 8,
     statType: StatType.Kills,
@@ -119,7 +119,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 9,
     statType: StatType.Kills,
@@ -130,7 +130,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 10,
     statType: StatType.Kills,
@@ -141,7 +141,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 11,
     statType: StatType.Kills,
@@ -152,7 +152,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 12,
     statType: StatType.Kills,
@@ -163,7 +163,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.Kills,
@@ -174,7 +174,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.Kills,
@@ -187,7 +187,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.KillStreak,
@@ -198,7 +198,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.KillStreak,
@@ -209,7 +209,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.KillStreak,
@@ -220,7 +220,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.KillStreak,
@@ -233,7 +233,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.LongestLife,
@@ -244,7 +244,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.LongestLife,
@@ -255,7 +255,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.LongestLife,
@@ -266,7 +266,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.LongestLife,
@@ -279,7 +279,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.DamageTaken,
@@ -290,7 +290,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.DamageTaken,
@@ -301,7 +301,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.DamageTaken,
@@ -312,7 +312,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.DamageTaken,
@@ -325,7 +325,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.TotalDamage,
@@ -336,7 +336,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'amazon-id',
       name: 'Amazon',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.TotalDamage,
@@ -347,7 +347,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 1,
     statType: StatType.TotalDamage,
@@ -358,7 +358,7 @@ export const topPlayers: TopPlayer[] = [
     championInfo: {
       id: 'berserker-id',
       name: 'Berserker',
-      iconUrl: 'images/fullscreen/character-select-face.png',
+      iconUrl: 'images/fullscreen/character-select/face.png',
     },
     rank: 2,
     statType: StatType.TotalDamage,
