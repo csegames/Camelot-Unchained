@@ -68,6 +68,7 @@ const FullScreenImage = styled.div`
   background-image: url(../images/fullscreen/fullscreen-image-bg.jpg);
   background-size: cover;
   background-repeat: no-repeat;
+  z-index: -1;
 `;
 
 export interface Props {

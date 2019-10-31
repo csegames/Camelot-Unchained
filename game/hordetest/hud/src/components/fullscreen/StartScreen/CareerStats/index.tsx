@@ -7,6 +7,7 @@
 import React from 'react';
 import { styled } from '@csegames/linaria/react';
 import { StatBlock } from './StatBlock';
+import { List } from './List';
 
 const Container = styled.div`
   display: flex;
@@ -76,7 +77,9 @@ export function CareerStats(props: Props) {
           average={21344}
         />
       </StatBlockContainer>
-      <ListContainer></ListContainer>
+      <ListContainer>
+        <List />
+      </ListContainer>
     </Container>
   );
 }
