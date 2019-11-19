@@ -11,6 +11,7 @@ import { ViewBearingContextProvider } from './ViewBearingContext';
 import { ObjectivesContextProvider } from './ObjectivesContext';
 import { PlayerPositionContextProvider } from './PlayerPositionContext';
 import { ChampionInfoContextProvider } from './ChampionInfoContext';
+import { InteractiveAlertsContextProvider } from './InteractiveAlertsContext';
 
 export class ContextProviders extends React.Component<{}> {
   public render() {
@@ -21,7 +22,9 @@ export class ContextProviders extends React.Component<{}> {
             <ViewBearingContextProvider>
               <ObjectivesContextProvider>
                 <PlayerPositionContextProvider>
-                  {this.props.children}
+                  <InteractiveAlertsContextProvider>
+                    {this.props.children}
+                  </InteractiveAlertsContextProvider>
                 </PlayerPositionContextProvider>
               </ObjectivesContextProvider>
             </ViewBearingContextProvider>
