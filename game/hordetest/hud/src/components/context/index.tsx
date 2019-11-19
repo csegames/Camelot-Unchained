@@ -6,7 +6,6 @@
 
 import React from 'react';
 import { InputContextProvider } from './InputContext';
-import { ScreenContextProvider } from './ScreenContext';
 import { ViewBearingContextProvider } from './ViewBearingContext';
 import { ObjectivesContextProvider } from './ObjectivesContext';
 import { PlayerPositionContextProvider } from './PlayerPositionContext';
@@ -17,20 +16,26 @@ export class ContextProviders extends React.Component<{}> {
   public render() {
     return (
       <InputContextProvider>
-        <ScreenContextProvider>
-          <ChampionInfoContextProvider>
-            <ViewBearingContextProvider>
-              <ObjectivesContextProvider>
-                <PlayerPositionContextProvider>
-                  <InteractiveAlertsContextProvider>
-                    {this.props.children}
-                  </InteractiveAlertsContextProvider>
-                </PlayerPositionContextProvider>
-              </ObjectivesContextProvider>
-            </ViewBearingContextProvider>
-          </ChampionInfoContextProvider>
-        </ScreenContextProvider>
+        <ViewBearingContextProvider>
+          <ObjectivesContextProvider>
+            <PlayerPositionContextProvider>
+              {this.props.children}
+            </PlayerPositionContextProvider>
+          </ObjectivesContextProvider>
+        </ViewBearingContextProvider>
       </InputContextProvider>
+    );
+  }
+}
+
+export class FullScreenContextProviders extends React.Component<{}> {
+  public render() {
+    return (
+      <ChampionInfoContextProvider>
+        <InteractiveAlertsContextProvider>
+          {this.props.children}
+        </InteractiveAlertsContextProvider>
+      </ChampionInfoContextProvider>
     );
   }
 }

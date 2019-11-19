@@ -7,6 +7,7 @@
 import React from 'react';
 import { styled } from '@csegames/linaria/react';
 
+import { ContextProviders, FullScreenContextProviders } from '../context';
 import { Chat } from 'cushared/components/Chat';
 import { DevUI } from 'cushared/components/DevUI';
 
@@ -27,7 +28,6 @@ import { Objectives } from './Objectives';
 import { Console } from '../HUD/Console';
 import { LoadingScreen } from '../fullscreen/LoadingScreen';
 import { ImagePreloader } from './ImagePreloader';
-import { ContextProviders } from '../context';
 import { SelfHealthBar } from './SelfHealthBar';
 import { FriendlyHealthBars } from './FriendlyHealthBars';
 import { PlayerMessage } from './PlayerMessage';
@@ -243,7 +243,10 @@ export class HUD extends React.Component<Props> {
             <PlayerTrackers />
           </PlayerTrackersPosition>
 
-          <FullScreen />
+          <FullScreenContextProviders>
+            <FullScreen />
+          </FullScreenContextProviders>
+
           <SettingsContainer>
             <Settings />
           </SettingsContainer>
