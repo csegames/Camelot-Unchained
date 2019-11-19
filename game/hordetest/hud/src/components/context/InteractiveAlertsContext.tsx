@@ -77,14 +77,6 @@ export class InteractiveAlertsContextProvider extends React.Component<{}, Intera
     );
   }
 
-  public componentDidMount() {
-    
-  }
-
-  public componentWillUnmount() {
-    
-  }
-
   private handleQuery = (gql: GraphQLResult<{ myInteractiveAlerts: IInteractiveAlert[] }>) => {
     if (!gql || !gql.data || !gql.data.myInteractiveAlerts) return gql;
 

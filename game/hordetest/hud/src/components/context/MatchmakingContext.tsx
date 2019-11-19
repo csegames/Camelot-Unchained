@@ -5,13 +5,64 @@
  */
 
 import React from 'react';
-// import gql from 'graphql-tag';
+import gql from 'graphql-tag';
+import { GraphQL } from '@csegames/library/lib/_baseGame/graphql/react';
+import { SubscriptionResult } from '@csegames/library/lib/_baseGame/graphql/subscription';
+import {
+  IMatchmakingUpdate,
+  MatchmakingUpdateType,
+  MatchmakingServerReady,
+  MatchmakingKickOff,
+  MatchmakingError,
+} from '@csegames/library/lib/hordetest/graphql/schema';
+
+export function onMatchmakingUpdate(callback: (matchmakingUpdate: IMatchmakingUpdate) => any): EventHandle {
+  return game.on('subscription-matchmakingupdates', callback);
+}
+
+const subscription = gql`
+  subscription MatchmakingNotificationSubscription {
+    matchmakingUpdates {
+      type
+
+      ... on MatchmakingServerReady {
+        host
+        port
+      }
+
+      ... on MatchmakingKickOff {
+        matchID
+        secondsToWait
+      }
+
+      ... on MatchmakingError {
+        error
+      }
+    }
+  }
+`;
 
 export interface MatchmakingContextState {
+  // MatchmakingServerReady
+  host: string;
+  port: number;
+
+  // MatchmakingKickOff
+  matchID: string;
+  secondsToWait: number;
+  teamMates: string;
+
+  // Error
+  error: string;
 }
 
 const getDefaultMatchmakingContextState = (): MatchmakingContextState => ({
-
+  host: null,
+  port: null,
+  matchID: null,
+  secondsToWait: null,
+  teamMates: null,
+  error: null,
 });
 
 export const MatchmakingContext = React.createContext(getDefaultMatchmakingContextState());
@@ -26,16 +77,36 @@ export class MatchmakingContextProvider extends React.Component<{}, MatchmakingC
   public render() {
     return (
       <MatchmakingContext.Provider value={this.state}>
+        <GraphQL subscription={subscription} subscriptionHandler={this.handleSubscription} />
         {this.props.children}
       </MatchmakingContext.Provider>
     );
   }
 
-  public componentDidMount() {
-    
-  }
+  private handleSubscription = (result: SubscriptionResult<{ matchmakingUpdates: IMatchmakingUpdate }>, data: any) => {
+    if (!result.data && !result.data.matchmakingUpdates) return data;
 
-  public componentWillUnmount() {
-    
+    const matchmakingUpdate = result.data.matchmakingUpdates;
+    game.trigger('subscription-matchmakingupdates', matchmakingUpdate);
+
+    switch (matchmakingUpdate.type) {
+      case MatchmakingUpdateType.ServerReady: {
+        const { host, port } = matchmakingUpdate as MatchmakingServerReady;
+        this.setState({ host, port });
+        break;
+      }
+
+      case MatchmakingUpdateType.KickOff: {
+        const { matchID, secondsToWait, serializedTeamMates } = matchmakingUpdate as MatchmakingKickOff;
+        this.setState({ matchID, secondsToWait, teamMates: serializedTeamMates  });
+        break;
+      }
+
+      case MatchmakingUpdateType.Error: {
+        const { error } = matchmakingUpdate as MatchmakingError;
+        this.setState({ error });
+        break;
+      }
+    }
   }
 }
