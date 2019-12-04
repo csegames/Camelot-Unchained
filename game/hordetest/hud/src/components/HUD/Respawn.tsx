@@ -8,99 +8,64 @@ import * as React from 'react';
 import { styled } from '@csegames/linaria/react';
 import { InputContext } from 'components/context/InputContext';
 
-export const RespawnDimensions = {
-  width: 532,
-  height: 166,
-  widthUHD: 1064,
-  heightUHD: 332,
-};
-
 const Container = styled.div`
-  position: relative;
-  pointer-events: all;
-  width: ${RespawnDimensions.widthUHD}px;
-  height: ${RespawnDimensions.heightUHD}px;
-  background-image: url(../images/hud/respawn/uhd/banner.png);
-  background-size: 100% auto;
-  background-repeat: no-repeat;
-  background-position: center center;
-  z-index: -1;
-
-  @media (max-width: 1920px) {
-    width: ${RespawnDimensions.width}px;
-    height: ${RespawnDimensions.height}px;
-    background-image: url(../images/hud/respawn/hd/banner.png);
-  }
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: radial-gradient(transparent, black);
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
 `;
 
-const Content = styled.div`
+const Banner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  width: 473px;
+  height: 1080px;
+  background-image: url(../images/hud/respawn/banner.png);
+  background-size: contain;
+  pointer-events: all;
 `;
 
-const RespawnText = styled.div`
-  font-family: Caudex;
-  text-transform: uppercase;
-  color: #F5D699;
-  cursor: default;
-  font-size: 48px;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
+const DeadText = styled.div`
+  width: 298px;
+  height: 132px;
+  background-image: url(../images/hud/respawn/dead-text.png);
+  background-size: contain;
+`;
 
-  @media (max-width: 1920px) {
-    font-size: 26px;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
+const Button = styled.div`
+  padding: 10px;
+  text-transform: uppercase;
+  font-family: Colus;
+  font-size: 18px;
+  background-color: transparent;
+  transition: background-color 0.2s;
+  border: 2px solid #f9e163;
+  color: #f9e163;
+
+  &.leave {
+    color: white;
+    border: 2px solid #f9e163;
+    color: #f9e163;
   }
-`;
-
-const RespawnButton = styled.div`
-  position: relative;
-  font-family: Caudex;
-  background-color: rgba(17, 17, 17, 0.8);
-  color: #ffdfa0;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all ease .2s;
-  z-index: 10;
-  font-size: 28px;
-  letter-spacing: 0.4em;
-  padding: 8px 20px;
-  border: 2px solid #404040;
-  border-width: 2px 1px 2px 1px;
-  border-image: url(../images/hud/respawn/uhd/button-border-gold.png);
-  border-image-slice: 2 1 2 1;
-  margin: 6px;
 
   &:hover {
-    background-image: url(../images/hud/respawn/uhd/button-glow.png);
+    background-color: rgba(255, 255, 255, 0.2);
   }
+`;
 
-  &.highlight {
-    background-image: url(../images/hud/respawn/uhd/button-glow.png);
-  }
+const Heart = styled.div`
+  font-size: 16px;
+  color: white;
 
-  @media (max-width: 1920px) {
-    font-size: 14px;
-    letter-spacing: .2em;
-    padding: 4px 10px;
-    border: 1px solid #404040;
-    border-width: 2px 1px 2px 1px;
-    border-image: url(../images/hud/respawn/hd/button-border-gold.png);
-    border-image-slice: 2 1 2 1;
-    margin: 3px;
-
-    &:hover {
-      background-image: url(../images/hud/gamemenu/button-glow.png);
-    }
-
-    &.highlight {
-      background-image: url(../images/hud/gamemenu/button-glow.png);
-    }
+  &.life {
+    color: red;
   }
 `;
 
@@ -124,15 +89,23 @@ class RespawnWithInjectedContext extends React.Component<Props, State> {
   }
 
   public render() {
+    const playerState = hordetest.game.selfPlayerState;
+    const hearts = Array.from(Array(playerState.maxDeaths));
     return this.state.visible ? (
         <Container data-input-group='block'>
-          <Content>
-            <RespawnText>You died!</RespawnText>
-            <RespawnButton className={this.props.isConsole ? 'highlight' : ''} onClick={this.onRespawn}>
-              {this.props.isConsole && <span className={game.gamepadSelectBinding.iconClass}></span>}
-              Respawn
-            </RespawnButton>
-          </Content>
+          <Banner>
+            <DeadText />
+            {hearts.map((heart, i) => {
+              const isLife = i + 1 <= playerState.maxDeaths - playerState.currentDeaths;
+              return (
+                <Heart className={isLife ? 'life' : ''} />
+              );
+            })}
+            {playerState.currentDeaths < playerState.maxDeaths ?
+              <Button onClick={this.onRespawn}>Respawn</Button> :
+              <Button className='leave' onClick={this.onRespawn}>Leave Match</Button>
+            }
+          </Banner>
         </Container>
     ) : null;
   }

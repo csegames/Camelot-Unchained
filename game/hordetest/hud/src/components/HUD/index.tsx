@@ -148,13 +148,6 @@ const AnnouncementsPosition = styled.div`
   pointer-events: none;
 `;
 
-const RespawnPosition = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
 const PlayerTrackersPosition = styled.div`
   position: fixed;
   top: 0;
@@ -237,10 +230,6 @@ export class HUD extends React.Component<Props> {
             <Chat accessToken={game.accessToken} />
           </ChatPosition>
 
-          <RespawnPosition>
-            <Respawn />
-          </RespawnPosition>
-
           <PlayerTrackersPosition>
             <PlayerTrackers />
           </PlayerTrackersPosition>
@@ -252,6 +241,8 @@ export class HUD extends React.Component<Props> {
           <SettingsContainer>
             <Settings />
           </SettingsContainer>
+
+          <Respawn />
           <MenuModal />
           <LeftModal />
           <RightModal />
