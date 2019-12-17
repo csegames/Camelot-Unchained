@@ -2144,13 +2144,6 @@
   resolved "http://registry.camelotunchained.com/@types%2fanymatch/-/anymatch-1.3.1.tgz#336badc1beecb9dacc38bea2cf32adf627a8421a"
   integrity sha512-/+CRPXpBDpo2RK9C68N3b2cOvO0Cf5B9aPijHsoDQTHivnGSObdOF2BRQOYjojWTDy6nQvMjmqRXIxH55VjxxA==
 
-"@types/aphrodite@^0.5.5":
-  version "0.5.13"
-  resolved "http://registry.camelotunchained.com/@types%2faphrodite/-/aphrodite-0.5.13.tgz#0290eb7250d81aaab384320d894f027eb92452e0"
-  integrity sha512-1Li6+mLQYgKrQYopVh8yM8MhHgf2jsRbDruQeqzGWORXC4VqgYf6H/18TB/PSlKJIC7QN8IIS8aoAYBMGvvhDw==
-  dependencies:
-    csstype "^2.2.0"
-
 "@types/babel-types@*":
   version "7.0.7"
   resolved "http://registry.camelotunchained.com/@types%2fbabel-types/-/babel-types-7.0.7.tgz#667eb1640e8039436028055737d2b9986ee336e3"
@@ -2241,11 +2234,6 @@
     "@types/glob" "*"
     fast-glob "^2.0.2"
 
-"@types/google-protobuf@^3.7.2":
-  version "3.7.2"
-  resolved "http://registry.camelotunchained.com/@types%2fgoogle-protobuf/-/google-protobuf-3.7.2.tgz#cd8a360c193ce4d672575a20a79f49ba036d38d2"
-  integrity sha512-ifFemzjNchFBCtHS6bZNhSZCBu7tbtOe0e8qY0z2J4HtFXmPJjm6fXSaQsTG7yhShBEZtt2oP/bkwu5k+emlkQ==
-
 "@types/googlemaps@^3.26.4":
   version "3.37.0"
   resolved "http://registry.camelotunchained.com/@types%2fgooglemaps/-/googlemaps-3.37.0.tgz#85596a2b93ded3850ac83ff575b66c34053c0ac8"
@@ -2319,11 +2307,6 @@
 "@types/node@^10.1.0":
   version "10.9.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.9.4.tgz#0f4cb2dc7c1de6096055357f70179043c33e9897"
-
-"@types/node@^12.0.2":
-  version "12.0.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.2.tgz#3452a24edf9fea138b48fad4a0a028a683da1e40"
-  integrity sha512-5tabW/i+9mhrfEOUcLDu2xBPsHJ+X5Orqy9FKpale3SjDA17j5AEpYq5vfy3oAeAHGcvANRCO3NV3d2D6q3NiA==
 
 "@types/object-assign@4.0.30":
   version "4.0.30"
@@ -8317,10 +8300,10 @@ google-maps@^3.2.1:
   resolved "http://registry.camelotunchained.com/google-maps/-/google-maps-3.3.0.tgz#4432b4715406bc15268ad35b1dd1b04d974956a6"
   integrity sha512-pj4En0cWKG+lcBvC7qrzu5ItiMsYNTgjG2capsPzAbAM/O8ftugGpUUftTTwdGL8KlNvB4CEZ6IBWwpWYzUEpw==
 
-google-protobuf@^3.8.0-rc.1:
-  version "3.8.0-rc.1"
-  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.8.0-rc.1.tgz#cd22a63ff8c16d46d872ba84b61f0882e270a005"
-  integrity sha512-4GDqS1fsxtXqDJoISikYWJqxRcUu7421Tp58//Qzog+aK5u0KHqsNw1dZC1TebMbyaOCHL0CfsBr2/t+e9QBFg==
+google-protobuf@^3.11.2:
+  version "3.11.2"
+  resolved "http://registry.camelotunchained.com/google-protobuf/-/google-protobuf-3.11.2.tgz#43272974521a5cec35a21f62730cf517a5a8e38c"
+  integrity sha512-T4fin7lcYLUPj2ChUZ4DvfuuHtg3xi1621qeRZt2J7SvOQusOzq+sDT4vbotWTCjUXJoR36CA016LlhtPy80uQ==
 
 got@^5.0.0:
   version "5.7.1"
@@ -8545,6 +8528,13 @@ graphql-tools@3.1.1:
     deprecated-decorator "^0.1.6"
     iterall "^1.1.3"
     uuid "^3.1.0"
+
+graphql@0.13.0:
+  version "0.13.0"
+  resolved "http://registry.camelotunchained.com/graphql/-/graphql-0.13.0.tgz#d1b44a282279a9ce0a6ec1037329332f4c1079b6"
+  integrity sha512-WlO+ZJT9aY3YrBT+H5Kk+eVb3OVVehB9iRD/xqeHdmrrn4AFl5FIcOpfHz/vnBr6Y6JthGMlnFqU8XRnDjSR7A==
+  dependencies:
+    iterall "1.1.x"
 
 graphql@^0.10.0, graphql@^0.10.3:
   version "0.10.5"
@@ -9999,6 +9989,11 @@ iterall@1.1.3:
   version "1.1.3"
   resolved "http://registry.camelotunchained.com/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"
   integrity sha512-Cu/kb+4HiNSejAPhSaN1VukdNTTi/r4/e+yykqjlG/IW+1gZH5b4+Bq3whDX4tvbYugta3r8KTMUiqT3fIGxuQ==
+
+iterall@1.1.x:
+  version "1.1.4"
+  resolved "http://registry.camelotunchained.com/iterall/-/iterall-1.1.4.tgz#0db40d38fdcf53ae14dc8ec674e62ab190d52cfc"
+  integrity sha512-eaDsM/PY8D/X5mYQhecVc5/9xvSHED7yPON+ffQroBeTuqUVm7dfphMkK8NksXuImqZlVRoKtrNfMIVCYIqaUQ==
 
 iterall@^1.0.0, iterall@^1.1.0, iterall@^1.1.3, iterall@^1.2.1, iterall@^1.2.2:
   version "1.2.2"
@@ -16413,11 +16408,6 @@ ts-loader@^4.4.2:
     loader-utils "^1.0.2"
     micromatch "^3.1.4"
     semver "^5.0.1"
-
-ts-protoc-gen@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/ts-protoc-gen/-/ts-protoc-gen-0.9.0.tgz#3910a67dc4445acf4bc3c6f7f67709619e987a6e"
-  integrity sha512-cFEUTY9U9o6C4DPPfMHk2ZUdIAKL91hZN1fyx5Stz3g56BDVOC7hk+r5fEMCAGaaIgi2akkT1a2hrxu1wo2Phg==
 
 ts-transform-graphql-tag@^0.1.3:
   version "0.1.3"

@@ -47,13 +47,12 @@
     "prepare": "cwd-in-node-modules || (rimraf typings && typings install && nps gql && nps definitions)"
   },
   "dependencies": {
-    "aphrodite": "^1.2.3",
     "cwd-in-node-modules": "^1.0.1",
     "emotion": "^9.2.10",
     "es6-promise": "^3.0.2",
     "fuzzysearch": "^1.0.3",
-    "google-protobuf": "^3.8.0-rc.1",
-    "graphql": "^0.13.2",
+    "google-protobuf": "^3.11.2",
+    "graphql": "0.13.0",
     "graphql-tag": "^1.2.4",
     "node-xmpp-client": "2.1.0",
     "randomstring": "^1.1.5",
@@ -62,17 +61,13 @@
     "react-dom": "^16.8.0",
     "react-emotion": "^9.2.10",
     "react-transition-group": "1.x",
-    "redux-typed-modules": "^2.2.1",
-    "ts-protoc-gen": "^0.9.0"
+    "redux-typed-modules": "^2.2.1"
   },
   "devDependencies": {
-    "@csegames/linaria": "^0.1.103",
-    "@types/aphrodite": "^0.5.5",
-    "@types/google-protobuf": "^3.7.2",
+    "@csegames/linaria": "^0.1.101",
     "@types/graphql": "^0.13.4",
     "@types/jest": "^19.2.2",
     "@types/lodash": "^4.14.109",
-    "@types/node": "^12.0.2",
     "@types/randomstring": "^1.1.6",
     "@types/react": "^16.7.17",
     "@types/react-dom": "^16.0.11",
