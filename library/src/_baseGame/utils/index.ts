@@ -19,6 +19,7 @@ import './ReconnectingWebSocket';
 import './local-storage';
 import './textUtils';
 import './distance';
+import './numberUtils';
 
 export * from './arrayUtils';
 export * from './EventEmitter';

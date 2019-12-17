@@ -7,7 +7,7 @@
 import React from 'react';
 import { styled } from '@csegames/linaria/react';
 
-import { Chat } from 'cushared/components/Chat';
+import { Chat } from 'components/shared/Chat';
 import { StartScreen } from './StartScreen';
 import { ChampionSelect } from './ChampionSelect';
 import { Button } from './Button';
@@ -79,7 +79,13 @@ export class FullScreen extends React.Component<Props, State> {
         </HideButton>
         {this.state.isChatVisible &&
           <ChatPosition>
-            <Chat accessToken={game.accessToken} />
+            <Chat
+              url={'ws://localhost:8100'}
+              getAccessToken={() => game.accessToken}
+              characterID={hordetest.game.selfPlayerState.characterID}
+              characterName={hordetest.game.selfPlayerState.name}
+              shard={game.shardID}
+            />
           </ChatPosition>
         }
       </Container>

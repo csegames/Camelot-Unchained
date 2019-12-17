@@ -1,13 +1,5 @@
 module.exports = {
   scripts: {
-    lint: {
-      script: 'tslint -t stylish src/**/*.ts{,x}',
-      description: 'Run TS-Lint"',
-      fix: {
-        script: 'tslint --fix src/**/*.ts{,x}',
-        description: 'Fix TS-Lint errors'
-      }
-    },
     tsc: 'tsc',
     dev: 'start npm-watch',
     clean: 'rimraf tmp && rimraf lib',
@@ -31,6 +23,7 @@ module.exports = {
         misc: 'copyup "src/hordetest/**/*.html" "src/hordetest/**/*.css" "src/hordetest/**/*.scss" "lib/"',
         tmp: 'copyup "tmp/**/*" "lib/"',
       },
+      proto: 'copyup "src/chat/**/*.js" src/chat/**/*.proto "lib/"',
     },
     updateApi: {
       camelotunchained: {
@@ -41,8 +34,8 @@ module.exports = {
       },
     },
     copies: {
-      camelotunchained: 'nps copy.definitions && nps copy.camelotunchained.thirdParty && nps copy.camelotunchained.misc',
-      hordetest: 'nps copy.definitions && nps copy.hordetest.thirdParty && nps copy.hordetest.misc',
+      camelotunchained: 'nps copy.definitions && nps copy.camelotunchained.thirdParty && nps copy.camelotunchained.misc && nps copy.proto',
+      hordetest: 'nps copy.definitions && nps copy.hordetest.thirdParty && nps copy.hordetest.misc && nps copy.proto',
     },
     build: {
       default: 'nps clean -s && (nps build.camelotunchained & nps build.hordetest) && rimraf tmp',

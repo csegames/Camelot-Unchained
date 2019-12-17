@@ -8,7 +8,7 @@ import React from 'react';
 import { styled } from '@csegames/linaria/react';
 
 import { ContextProviders, FullScreenContextProviders } from '../context';
-import { Chat } from 'cushared/components/Chat';
+import { Chat } from 'components/shared/Chat';
 import { DevUI } from 'cushared/components/DevUI';
 
 // import { ChannelBar } from './ChannelBar';
@@ -272,7 +272,13 @@ export class HUD extends React.Component<Props, State> {
           </FriendlyHealthBarsPosition>
 
           <ChatPosition>
-            <Chat accessToken={game.accessToken} />
+            <Chat
+              url={'ws://localhost:8100'}
+              characterID={hordetest.game.selfPlayerState.characterID}
+              characterName={hordetest.game.selfPlayerState.name}
+              shard={game.shardID}
+              getAccessToken={() => game.accessToken}
+            />
           </ChatPosition>
 
           <PlayerTrackersPosition>
