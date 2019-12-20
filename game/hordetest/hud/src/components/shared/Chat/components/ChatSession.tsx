@@ -25,6 +25,7 @@ export interface ChatOptions {
   characterName: string;
   shard: number;
   getAccessToken: () => string;
+  debug?: boolean;
 }
 
 export class ChatSession {

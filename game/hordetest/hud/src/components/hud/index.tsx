@@ -273,11 +273,12 @@ export class HUD extends React.Component<Props, State> {
 
           <ChatPosition>
             <Chat
-              url={'ws://localhost:8100'}
+              url={'ws://localhost:8100/chat'}
               characterID={hordetest.game.selfPlayerState.characterID}
               characterName={hordetest.game.selfPlayerState.name}
               shard={game.shardID}
               getAccessToken={() => game.accessToken}
+              debug={true}
             />
           </ChatPosition>
 

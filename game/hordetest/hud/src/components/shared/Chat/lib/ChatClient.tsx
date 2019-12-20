@@ -26,6 +26,12 @@ export class ChatClient {
   private characterName: string;
   private connectOptions: ChatOptions | (() => ChatOptions);
 
+  constructor() {
+    this.onConnected = this.onConnected.bind(this);
+    this.internalInitEvents = this.internalInitEvents.bind(this);
+    this.internalFire = this.internalFire.bind(this);
+  }
+
   public get connected() {
     return this.chat && this.chat.connected;
   }
@@ -73,6 +79,8 @@ export class ChatClient {
   private internalInitEvents(): void {
 
     this.chat.onChatMessage(msg => {
+      console.log('onChatMessage');
+      console.log(msg);
       switch (msg.type) {
         case ChatMessage_MessageTypes.Direct:
           this.internalFire('message', {
@@ -179,6 +187,10 @@ export class ChatClient {
       console.warn('ChatClient:sendMessageToRoom() called when not connected.');
       return;
     }
+
+    console.log('ChatClient: sendMessageToRoom');
+    console.log(message);
+    console.log(roomName);
     this.chat.sendMessageToRoom(message, roomName);
   }
 

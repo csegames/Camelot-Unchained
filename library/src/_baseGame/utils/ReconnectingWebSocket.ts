@@ -142,6 +142,9 @@ export class ReconnectingWebSocket {
     }
 
     try {
+      console.log('gnna connect');
+      console.log(this.url);
+      console.log(this.protocols);
       this.socket = new WebSocket(this.url, this.protocols);
       this.socket.binaryType = 'arraybuffer';
       this.socket.onerror = this.error;
@@ -203,6 +206,7 @@ export class ReconnectingWebSocket {
   };
 
   private open = (e: Event) => {
+    console.log('connection open');
     if (this.debug) {
       this.log("connection open");
     }
@@ -211,6 +215,7 @@ export class ReconnectingWebSocket {
   };
 
   private closed = (e: CloseEvent) => {
+    console.log('connection closed');
     if (this.debug) {
       this.log("connection closed");
     }

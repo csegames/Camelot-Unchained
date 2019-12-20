@@ -22,11 +22,11 @@ export interface Options extends Partial<WebSocketOptions> {
 
 export function defaultOpts(): Options {
   return {
-    url: `ws://localhost:8100/ws`,
+    url: `ws://localhost:8100/chat`,
     protocols: 'chat-ws',
     reconnectInterval: 15000,
     connectTimeout: 5000,
-    debug: true,
+    debug: false,
 
     characterID: '',
     shardID: 1,
@@ -83,10 +83,14 @@ export class CSEChat {
     }
     this.socket = new ReconnectingWebSocket(this.options);
     this.socket.onopen = () => {
+      console.log('socket was opened!!!!');
       this.sendAuth();
       this.sendPing();
       this.requestDirectory();
       this.eventEmitter.emit('connected');
+    }
+    this.socket.onclose = () => {
+      console.log('socket was closed!!!!');
     }
     this.socket.onerror = (err) => {
       this.eventEmitter.emit('error', err);
@@ -103,6 +107,10 @@ export class CSEChat {
   }
 
   private sendAuth = () => {
+    console.log('Sending auth!!!');
+    console.log(this.options.shardID);
+    console.log(this.options.characterID);
+    console.log(this.options.token());
     this.socket.send(
       JSON.stringify({
         shard: this.options.shardID,
@@ -305,6 +313,9 @@ export class CSEChat {
     const union = new chat.ChatServerUnionMessage();
     union.setMessagetype(1); // CHAT
     union.setChat(chatMessage);
+
+    console.log('send proto messsage');
+    console.log(union);
     this.sendProtoMessage(union);
   };
 
@@ -828,7 +839,18 @@ export class CSEChat {
   }
 
   private sendProtoMessage = (msg: any) => {
+    console.log('inside sendProtoMessage');
     if (!this.connected) return;
+    console.log('is connected, and continuing to send');
+    console.log(msg.serializeBinary());
+    console.log(this.socket);
+    this.socket.send(
+      JSON.stringify({
+        shard: this.options.shardID,
+        characterID: this.characterID,
+        token: this.options.token()
+      })
+    );
     this.socket.send(msg.serializeBinary());
   };
 

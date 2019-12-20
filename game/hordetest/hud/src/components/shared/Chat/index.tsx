@@ -6,6 +6,7 @@
 
 import * as React from 'react';
 import { throttle } from 'lodash';
+// import { styled } from '@csegames/linaria/react';
 import { parseMessageForSlashCommand } from '@csegames/library/lib/_baseGame';
 
 import ChatSession, { ChatOptions } from './components/ChatSession';
@@ -26,6 +27,12 @@ export interface ChatState {
 export interface ChatProps extends ChatOptions {
   hideChat?: () => void;
 }
+
+// const Button = styled.div`
+//   cursor: pointer;
+//   padding: 5px;
+//   color: white;
+// `;
 
 export class Chat extends React.Component<ChatProps, ChatState> {
   private _eventHandlers: EventHandle[] = [];
@@ -79,9 +86,10 @@ export class Chat extends React.Component<ChatProps, ChatState> {
             />
           <Content
             room={room}
-            send={this.sentToRoom}
+            send={this.sendToRoom}
             slashCommand={this.slashCommand}
             />
+            {/* <Button onClick={}>Test Send Chat</Button> */}
         </div>
       </div>
     );
@@ -100,8 +108,14 @@ export class Chat extends React.Component<ChatProps, ChatState> {
   //   this.state.chat.sendToUser(text, name);
   // }
 
-  private sentToRoom = (text: string, room: string) => {
-    this.state.chat.sendToRoom(text, name);
+  // private sendMessage = (text: string) => {
+  // }
+
+  private sendToRoom = (text: string, room: string) => {
+    console.log('send to room');
+    console.log(text);
+    console.log(room);
+    this.state.chat.sendToRoom(text, room);
   }
 
   private update = (chat: ChatSession): void => {
@@ -121,6 +135,8 @@ export class Chat extends React.Component<ChatProps, ChatState> {
   }
 
   private joinRoom = (roomName: string, displayName?: string): void => {
+    console.log('joinRoom');
+    console.log(roomName);
     const roomId = roomName;
     this.state.chat.joinRoom(roomId);
   }
