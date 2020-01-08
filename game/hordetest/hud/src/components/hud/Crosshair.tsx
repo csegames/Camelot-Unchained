@@ -19,6 +19,7 @@ const CrosshairImage = styled.img`
 
 export function Crosshair() {
   const [isVisible, setIsVisible] = useState(cloneDeep(hordetest.game.selfPlayerState.isAlive));
+  const [showOutOfResourceMessage, setShowOutOfResourceMessage] = useState(false);
 
   useEffect((() => {
     const evh = hordetest.game.selfPlayerState.onUpdated(() => {
@@ -38,6 +39,24 @@ export function Crosshair() {
     };
   }));
 
+  useEffect(() => {
+    const weakAbility = hordetest.game.abilityStates[hordetest.game.abilityBarState.weak.id];
+    const evh = hordetest.game.abilityStates[hordetest.game.abilityBarState.weak.id].onActivated(() => {
+      handleAbilityActivated(weakAbility);
+    });
+
+    return () => {
+      evh.clear();
+    }
+  });
+
+  function handleAbilityActivated(ability: AbilityState) {
+    if (!(ability.status & AbilityButtonState.Unusable)) return;
+
+    if (ability.error & AbilityButtonErrorFlag.NotEnoughResource) {
+      setShowOutOfResourceMessage(true);
+    }
+  }
   return isVisible ? (
     <Container>
       <CrosshairImage src={'images/hud/crosshair.png'} />
