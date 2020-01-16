@@ -14,8 +14,6 @@ import { MiddleModalComponent } from '../../MiddleModal';
 import { Input } from '../../Input';
 import { Button } from '../../Button';
 
-const INVALID_ID = '0000000000000000000000';
-
 const EnterNameText = styled.div`
   font-size: 38px;
   font-family: Colus;
@@ -61,10 +59,10 @@ export function InviteFriendModal(props: Props) {
   async function onSendInviteClick() {
     const res = await webAPI.GroupsAPI.InviteV1(
       webAPI.defaultConfig,
-      game.shardID,
-      game.characterID,
+      game.shardID || 14,
+      game.characterID.length === 22 ? game.characterID : hordetest.game.selfPlayerState.characterID,
       warbandContext.groupID,
-      INVALID_ID,
+      null,
       inviteName,
       GroupTypes.Warband as any,
     );
@@ -73,8 +71,16 @@ export function InviteFriendModal(props: Props) {
       game.trigger('hide-middle-modal');
     } else {
       // failed
-      const reason = JSON.parse(res.data);
-      setErrorMessage(`Error: ${reason ? reason : 'Unknown reason.'}`);
+      console.log(res);
+      console.log(res.data);
+      try {
+        const reason = JSON.parse(res.data);
+        setErrorMessage(`Error: ${typeof reason === 'string' ?
+          reason : reason.FieldCodes[0] ?
+          reason.FieldCodes[0].Actions[0].Message : 'Unknown reason.'}`);
+      } catch (e) {
+        setErrorMessage('An Unknown error occured.')
+      }
     }
   }
 

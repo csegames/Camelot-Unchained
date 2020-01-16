@@ -23,7 +23,7 @@ export function defaultOpts(): Options {
   return {
     url: () => `ws://${game.serverHost}:9990/chat`,
     protocols: 'chat-ws',
-    reconnectInterval: 500,
+    reconnectInterval: 15000,
     connectTimeout: 5000,
     debug: false,
 

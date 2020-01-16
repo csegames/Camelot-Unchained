@@ -24,7 +24,7 @@ export function defaultSubscriptionOpts(): Options<any> {
   return {
     url: () => `${game.webAPIHost}/graphql`.replace(/(http)(s?:\/\/)/, 'ws$2'),
     protocols: 'graphql-ws',
-    reconnectInterval: 500,
+    reconnectInterval: 15000,
     connectTimeout: 5000,
     initPayload: {
       shardID: game.shardID,

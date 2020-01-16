@@ -18,6 +18,7 @@ import { Skin, StoreItemType } from '../Store/testData';
 import { InputContext } from 'context/InputContext';
 import { ChampionInfoContext } from 'context/ChampionInfoContext';
 import { ColossusProfileContext } from 'context/ColossusProfileContext';
+import { WarbandContext } from 'context/WarbandContext';
 import { ChampionInfo, ChampionCostumeInfo } from '@csegames/library/lib/hordetest/graphql/schema';
 
 const Container = styled.div`
@@ -102,6 +103,7 @@ export function ChampionProfile(props: Props) {
   const inputContext = useContext(InputContext);
   const championInfoContext = useContext(ChampionInfoContext);
   const colossusProfileContext = useContext(ColossusProfileContext);
+  const warbandContext = useContext(WarbandContext);
   const [editingMode, setEditingMode] = useState(EditingMode.None);
   const [selectedChampion, setSelectedChampion] = useState(getDefaultChampion());
   const [selectedPreviewSkinInfo, setSelectedPreviewSkinInfo] = useState<Skin>(null);
@@ -209,6 +211,8 @@ export function ChampionProfile(props: Props) {
       game.shardID,
       selectedChampion.id as any,
       selectedChampion.costumes[0].id as any,
+      warbandContext.groupID || '',
+      game.characterID,
     );
 
     if (res.ok) {
