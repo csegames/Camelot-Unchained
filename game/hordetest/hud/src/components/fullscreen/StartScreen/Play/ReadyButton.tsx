@@ -83,6 +83,8 @@ export interface Props {
   onUnready: () => void;
   enterMatchmaking: () => Promise<RequestResult>;
   cancelMatchmaking:  () => Promise<RequestResult>;
+
+  testChampionSelect: () => void;
 }
 
 export interface State {
@@ -187,6 +189,8 @@ class ReadyButtonWithInjectedContext extends React.Component<Props, State> {
   }
 
   private onClick = () => {
+    this.props.testChampionSelect();
+    return;
     if (this.state.isReady) {
       if (this.props.warbandContextState.groupID) {
         // group
@@ -279,6 +283,7 @@ export function ReadyButton(props: {
   onUnready: () => void,
   enterMatchmaking: () => Promise<RequestResult>,
   cancelMatchmaking:  () => Promise<RequestResult>,
+  testChampionSelect: () => void,
 }) {
   const inputContextState = useContext(InputContext);
   const matchmakingContextState = useContext(MatchmakingContext);
@@ -293,6 +298,7 @@ export function ReadyButton(props: {
       onUnready={props.onUnready}
       enterMatchmaking={props.enterMatchmaking}
       cancelMatchmaking={props.cancelMatchmaking}
+      testChampionSelect={props.testChampionSelect}
     />
   )
 }

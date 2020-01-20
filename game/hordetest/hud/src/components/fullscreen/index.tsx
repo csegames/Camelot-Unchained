@@ -113,7 +113,7 @@ export class FullScreen extends React.Component<Props, State> {
       }
       case Route.Start: {
         return (
-          <StartScreen />
+          <StartScreen testChampionSelect={this.testChampionSelect} />
         );
       }
       case Route.ChampionSelect: {
@@ -144,6 +144,10 @@ export class FullScreen extends React.Component<Props, State> {
     this.showChatEVH.clear();
     this.hideChatEVH.clear();
     this.navigateEVH.clear();
+  }
+
+  private testChampionSelect = () => {
+    this.navigateTo(Route.ChampionSelect);
   }
 
   private getDefaultRoute = () => {

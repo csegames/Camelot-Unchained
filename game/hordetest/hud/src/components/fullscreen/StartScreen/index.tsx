@@ -73,6 +73,7 @@ const FullScreenImage = styled.div`
 `;
 
 export interface Props {
+  testChampionSelect: () => void;
 }
 
 export function StartScreen(props: Props) {
@@ -97,7 +98,7 @@ export function StartScreen(props: Props) {
       case StartScreenRoute.Play: {
         return (
           <PlayContainer>
-            <Play />
+            <Play testChampionSelect={props.testChampionSelect} />
           </PlayContainer>
         );
       }

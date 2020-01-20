@@ -22,6 +22,7 @@ import { LockIn } from './LockIn';
 import { ChampionInfoContext } from 'context/ChampionInfoContext';
 import { MatchmakingContext, onMatchmakingUpdate } from 'context/MatchmakingContext';
 import { InputContext } from 'context/InputContext';
+import { ColossusProfileContext } from 'context/ColossusProfileContext';
 import { ChampionSelectContextProvider } from './context/ChampionSelectContext';
 
 const Container = styled.div`
@@ -152,10 +153,18 @@ export function ChampionSelect(props: Props) {
   const { champions, championCostumes } = useContext(ChampionInfoContext);
   const { matchID } = useContext(MatchmakingContext);
   const inputContext = useContext(InputContext);
+  const colossusProfileContext = useContext(ColossusProfileContext);
   const [selectedChampion, setSelectedChampion] = useState(champions[0]);
   const [isLocked, setIsLocked] = useState(false);
 
-  updateSelectedChampion(selectedChampion.id, getChampionCostumeInfo(selectedChampion.id).id);
+  useEffect(() => {
+    if (colossusProfileContext.colossusProfile && colossusProfileContext.colossusProfile.defaultChampion) {
+      const { defaultChampion } = colossusProfileContext.colossusProfile;
+      updateSelectedChampion(defaultChampion.championID, defaultChampion.costumeID);
+    } else {
+      updateSelectedChampion(selectedChampion.id, getChampionCostumeInfo(selectedChampion.id).id);
+    }
+  }, []);
 
   useEffect(() => {
     const matchmakingEVH = onMatchmakingUpdate(handleMatchmakingUpdate);

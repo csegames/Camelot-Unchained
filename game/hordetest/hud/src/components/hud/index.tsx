@@ -352,7 +352,7 @@ export class HUD extends React.Component<Props, State> {
 
   private onConnectToServer = (fromMatchmaking: boolean = false) => {
     this.scenarioEndedEVH = hordetest.game.onScenarioRoundEnded(this.handleScenarioRoundEnded);
-    this.hideLobby();
+    //this.hideLobby();
   }
 
   private handleScenarioRoundEnded = (scenarioID: string, roundID: string, didEnd: boolean) => {

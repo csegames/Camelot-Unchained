@@ -71,6 +71,7 @@ const ButtonIcon = styled.span`
 export interface Props {
   warbandContext: WarbandContextState;
   inputContext: InputContextState;
+  testChampionSelect: () => void;
 }
 
 export interface State {
@@ -129,6 +130,7 @@ class PlayWithInjectedContext extends React.Component<Props, State> {
             }
           </div>
           <ReadyButton
+            testChampionSelect={this.props.testChampionSelect}
             onReady={this.onReady}
             onUnready={this.onUnready}
             enterMatchmaking={this.enterMatchmaking}
@@ -213,13 +215,14 @@ class PlayWithInjectedContext extends React.Component<Props, State> {
   }
 }
 
-export function Play() {
+export function Play(props: { testChampionSelect: () => void }) {
   const warbandContext = useContext(WarbandContext);
   const inputContext = useContext(InputContext);
   return (
     <PlayWithInjectedContext
       warbandContext={warbandContext}
       inputContext={inputContext}
+      testChampionSelect={props.testChampionSelect}
     />
   );
 }

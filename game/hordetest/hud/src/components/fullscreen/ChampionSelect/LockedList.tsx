@@ -69,12 +69,26 @@ export function LockedList(props: Props) {
         const championInfo = championContext.champions.find(c => c.id === championID);
 
         return (
-          <ListItem className={lockedClass}>
-            <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
-            <NameOfPlayer>
-              {player.characterID ? `${player.characterID} -` : ''} {championInfo ? championInfo.name : "UNKNOWN"} {isLocked ? 'is locked in' : ''}
-            </NameOfPlayer>
-          </ListItem>
+          <>
+            <ListItem className={lockedClass}>
+              <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
+              <NameOfPlayer>
+                {player.characterID ? `${player.characterID} -` : ''} {championInfo ? championInfo.name : "UNKNOWN"} {isLocked ? 'is locked in' : ''}
+              </NameOfPlayer>
+            </ListItem>
+            <ListItem className={lockedClass}>
+              <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
+              <NameOfPlayer>
+                {player.characterID ? `${player.characterID} -` : ''} {championInfo ? championInfo.name : "UNKNOWN"} {isLocked ? 'is locked in' : ''}
+              </NameOfPlayer>
+            </ListItem>
+            <ListItem className={'locked'}>
+              <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
+              <NameOfPlayer>
+                {player.characterID ? `${player.characterID} -` : ''} {championInfo ? championInfo.name : "UNKNOWN"} {isLocked ? 'is locked in' : ''}
+              </NameOfPlayer>
+            </ListItem>
+          </>
         );
       })}
     </Container>
