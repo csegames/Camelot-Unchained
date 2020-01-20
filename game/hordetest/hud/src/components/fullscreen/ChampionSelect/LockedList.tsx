@@ -21,9 +21,15 @@ const ListItem = styled.div`
   margin-bottom: 7px;
   background-color: rgba(0, 0, 0, 0.9);
   background-size: cover;
+  filter: grayscale(100%);
+
+  &.self {
+    filter: grayscale(0%);
+  }
 
   &.locked {
     border: 2px solid #ec9c30;
+    filter: grayscale(0%);
     &:before {
       content: '';
       position: absolute;
@@ -70,7 +76,7 @@ export function LockedList(props: Props) {
 
         return (
           <>
-            <ListItem className={lockedClass}>
+            <ListItem className={'self'}>
               <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
               <NameOfPlayer>
                 {player.characterID ? `${player.characterID} -` : ''} {championInfo ? championInfo.name : "UNKNOWN"} {isLocked ? 'is locked in' : ''}
