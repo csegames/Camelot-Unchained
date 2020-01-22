@@ -10,9 +10,6 @@ import { parseMessageForSlashCommand } from '@csegames/library/lib/_baseGame';
 
 import { useChatTheme } from '../theme';
 import { View } from '../state/viewsState';
-import { useChatOptions } from '../state/optionsState';
-import { useRoomsState, RoomsState } from '../state/roomsState';
-import { useChat } from '../state/chat';
 
 type InputProps = { color: string; fontFamily: string; } & React.HTMLProps<HTMLInputElement>;
 const Input = styled.textarea`
@@ -48,23 +45,6 @@ const Input = styled.textarea`
   }
 `;
 
-function getTarget(text: string, rooms: RoomsState, tab: View): [boolean, string, string] {
-  if (!text.startsWith('/')) {
-    return [false, text, tab.activeFilter];
-  }
-
-  var split = text.split(/ (.+)/);
-  var shortcut = split[0];
-  if (shortcut === '/dm' || shortcut === '/pm' || shortcut === '/r') {
-    const dmSplit = split[1].trimLeft().split(/ (.+)/);
-    const name = dmSplit[0].trim();
-    const message = dmSplit[1].trim();
-    return [true, message, name];
-  }
-
-  return [false, split[1] ? split[1].trim() : '', rooms.getRoomIDFromShortcut(shortcut)];
-}
-
 const SENT_HISTORY_LENGTH = 20;
 
 export interface Props {
@@ -74,9 +54,6 @@ export interface Props {
 
 export function ChatInput(props: Props) {
   const theme = useChatTheme();
-  const chat = useChat();
-  const [opts] = useChatOptions();
-  const [rooms] = useRoomsState(opts);
   const [value, setValue] = useState('');
   const sentMessages = useRef(new CircularArray<string>(SENT_HISTORY_LENGTH));
   let sentHistoryIndex = useRef(-1);
@@ -132,15 +109,11 @@ export function ChatInput(props: Props) {
       e.preventDefault();
       try {
         const val = e.currentTarget.value;
-        const [isDM, message, target] = getTarget(val, rooms, props.view);
-        if (message && target) {
-          if (isDM) {
-            chat.sendDirectMessage(message, null, target);
-          } else {
-            chat.sendMessageToRoom(message, target);
-          }
-          sentMessages.current.push(val)
-        } else if (val.startsWith('/') && !target) {
+        if (!val.startsWith('/')) {
+          const cmd = 'chat ' + val;
+          game.sendSlashCommand(cmd);
+          sentMessages.current.push(val);
+        } else {
           const cmd = val.replace('/', '');
           if (parseMessageForSlashCommand(cmd)) {
             sentMessages.current.push(val)
