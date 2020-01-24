@@ -104,6 +104,15 @@ export class ChampionSelectContextProvider extends React.Component<Props, Champi
 
     const championSelectInfo = query.data.championSelection;
     const playerStates = { ...this.state.playerStates };
+    // REMOVE THIS THIS IS TEST DATA
+    for (var i = 0; i < 10; i++) {
+      const champ = {
+        ...championSelectInfo.teamMates[0],
+        characterID: championSelectInfo.teamMates[0] + i.toString(),
+      };
+      championSelectInfo.teamMates.push(champ);
+    }
+    // REMOVE THIS THIS IS TEST DATA
     championSelectInfo.teamMates.forEach((teamMate) => {
       if (!playerStates[teamMate.characterID]) {
         playerStates[teamMate.characterID] = {
