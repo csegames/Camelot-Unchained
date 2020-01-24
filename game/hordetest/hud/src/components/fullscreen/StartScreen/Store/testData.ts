@@ -92,10 +92,6 @@ export const skins: StoreItem[] = [
     description: 'Lorem ipsum dolor sit amet',
   },
 
-  {
-
-  },
-
   // !!!! WEAPON !!!!
   {
     type: StoreItemType.Weapon,
