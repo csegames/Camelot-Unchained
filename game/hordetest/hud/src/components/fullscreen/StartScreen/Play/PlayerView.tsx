@@ -27,34 +27,78 @@ const PlayerPosition = styled.div`
   height: 500px;
   pointer-events: none;
 
-  &.Zero {
-    transform: translateX(-50%);
-    z-index: 10;
+  &.tenman {
+    &.Zero {
+
+    }
+
+    &.One {
+
+    }
+
+    &.Two {
+
+    }
+
+    &.Three {
+
+    }
+
+    &.Four {
+
+    }
+
+    &.Five {
+
+    }
+
+    &.Six {
+
+    }
+
+    &.Seven {
+
+    }
+
+    &.Eight {
+
+    }
+
+    &.Nine {
+
+    }
   }
 
-  &.One {
-    transform: translateX(-125%) scale(0.8);
-    z-index: 9;
-  }
+  &.sixman {
+    &.Zero {
+      transform: translateX(-50%);
+      z-index: 10;
+    }
 
-  &.Two {
-    transform: translateX(25%) scale(0.8);
-    z-index: 8;
-  }
+    &.One {
+      transform: translateX(-125%) scale(0.8);
+      z-index: 9;
+    }
 
-  &.Three {
-    transform: translateX(-200%) scale(0.7);
-    z-index: 7;
-  }
+    &.Two {
+      transform: translateX(25%) scale(0.8);
+      z-index: 8;
+    }
 
-  &.Four {
-    transform: translateX(100%) scale(0.7);
-    z-index: 6;
-  }
+    &.Three {
+      transform: translateX(-200%) scale(0.7);
+      z-index: 7;
+    }
 
-  &.Five {
-    transform: translateX(-275%) scale(0.6);
-    z-index: 5;
+    &.Four {
+      transform: translateX(100%) scale(0.7);
+      z-index: 6;
+    }
+
+    &.Five {
+      transform: translateX(-275%) scale(0.6);
+      z-index: 5;
+    }
   }
 `;
 
@@ -87,33 +131,35 @@ const PlayerInfoContainer = styled.div`
   justify-content: center;
   z-index: 10;
 
-  &.Zero {
-    transform: translateX(-50%);
-  }
+  &.sixman {
+    &.Zero {
+      transform: translateX(-50%);
+    }
 
-  &.One {
-    transform: translateX(-125%);
-    bottom: 25%;
-  }
+    &.One {
+      transform: translateX(-125%);
+      bottom: 25%;
+    }
 
-  &.Two {
-    transform: translateX(25%);
-    bottom: 25%;
-  }
+    &.Two {
+      transform: translateX(25%);
+      bottom: 25%;
+    }
 
-  &.Three {
-    transform: translateX(-200%);
-    bottom: 27%;
-  }
+    &.Three {
+      transform: translateX(-200%);
+      bottom: 27%;
+    }
 
-  &.Four {
-    transform: translateX(100%);
-    bottom: 27%;
-  }
+    &.Four {
+      transform: translateX(100%);
+      bottom: 27%;
+    }
 
-  &.Five {
-    transform: translateX(-275%);
-    bottom: 29%;
+    &.Five {
+      transform: translateX(-275%);
+      bottom: 29%;
+    }
   }
 `;
 
@@ -182,35 +228,47 @@ export interface Props {
   isReady: boolean;
 }
 
+function getClassName(index: number) {
+  switch (index) {
+    case 0: {
+      return 'Zero';
+    };
+    case 1: {
+      return 'One';
+    }
+    case 2: {
+      return 'Two';
+    }
+    case 3: {
+      return 'Three';
+    }
+    case 4: {
+      return 'Four';
+    }
+    case 5: {
+      return 'Five';
+    }
+    case 6: {
+      return 'Six';
+    }
+    case 7: {
+      return 'Seven';
+    }
+    case 8: {
+      return 'Eight';
+    }
+    case 9: {
+      return 'Nine';
+    }
+  }
+}
+
 export function PlayerView(props: Props) {
   const warbandContextState = useContext(WarbandContext);
   const colossusProfileContext = useContext(ColossusProfileContext);
   const championInfoContext = useContext(ChampionInfoContext);
   const myUserContext = useContext(MyUserContext);
   const champions = getChampions();
-
-  function getClassName(index: number) {
-    switch (index) {
-      case 0: {
-        return 'Zero';
-      };
-      case 1: {
-        return 'One';
-      }
-      case 2: {
-        return 'Two';
-      }
-      case 3: {
-        return 'Three';
-      }
-      case 4: {
-        return 'Four';
-      }
-      case 5: {
-        return 'Five';
-      }
-    }
-  }
 
   function getSortedMembers() {
     const groupMembers = Object.values(warbandContextState.groupMembers);
@@ -279,84 +337,83 @@ export function PlayerView(props: Props) {
   const standingImage = defaultChampion ? defaultChampion.standingImageURL :
     'images/fullscreen/startscreen/human-m-blackguard.png';
   const thumbnailImage = defaultChampion ? defaultChampion.thumbnailURL : '';
+  const displayName = myUserContext.myUser ? myUserContext.myUser.displayName : 'You'
   return (
     <Container>
-      <PlayerPosition className={getClassName(0)}>
-        <PlayerContainer>
-          <PlayerImage className={'player-image'} image={standingImage} />
-        </PlayerContainer>
-      </PlayerPosition>
-      <PlayerInfoContainer className={getClassName(0)}>
-        <ProfileBox className={true ? 'leader' : ''} image={thumbnailImage} />
-        <TextContainer>
-          <Name>{myUserContext.myUser ? myUserContext.myUser.displayName : 'You'}</Name>
-        </TextContainer>
-      </PlayerInfoContainer>
-
-      {/* <PlayerPosition className={getClassName(1)}>
-        <PlayerContainer>
-          <PlayerImage className={'player-image'} image={'images/hud/champions/berserker.png'} />
-        </PlayerContainer>
-      </PlayerPosition>
-      <PlayerInfoContainer className={getClassName(1)}>
-        <ProfileBox className={true ? 'leader' : ''} image={thumbnailImage} />
-        <TextContainer>
-          <Name>You</Name>
-          <Ready className={props.isReady ? '' : 'not-ready'}>{props.isReady ? 'Ready' : 'Not Ready'}</Ready>
-        </TextContainer>
-      </PlayerInfoContainer>
-
-      <PlayerPosition className={getClassName(2)}>
-        <PlayerContainer>
-          <PlayerImage className={'player-image'} image={'images/hud/champions/amazon.png'} />
-        </PlayerContainer>
-      </PlayerPosition>
-      <PlayerInfoContainer className={getClassName(2)}>
-        <ProfileBox className={true ? 'leader' : ''} image={thumbnailImage} />
-        <TextContainer>
-          <Name>You</Name>
-          <Ready className={props.isReady ? '' : 'not-ready'}>{props.isReady ? 'Ready' : 'Not Ready'}</Ready>
-        </TextContainer>
-      </PlayerInfoContainer>
-
-      <PlayerPosition className={getClassName(3)}>
-        <PlayerContainer>
-          <PlayerImage className={'player-image'} image={'images/hud/champions/amazon.png'} />
-        </PlayerContainer>
-      </PlayerPosition>
-      <PlayerInfoContainer className={getClassName(3)}>
-        <ProfileBox className={true ? 'leader' : ''} image={thumbnailImage} />
-        <TextContainer>
-          <Name>You</Name>
-          <Ready className={props.isReady ? '' : 'not-ready'}>{props.isReady ? 'Ready' : 'Not Ready'}</Ready>
-        </TextContainer>
-      </PlayerInfoContainer>
-
-      <PlayerPosition className={getClassName(4)}>
-        <PlayerContainer>
-          <PlayerImage className={'player-image'} image={'images/hud/champions/knight.png'} />
-        </PlayerContainer>
-      </PlayerPosition>
-      <PlayerInfoContainer className={getClassName(4)}>
-        <ProfileBox className={true ? 'leader' : ''} image={thumbnailImage} />
-        <TextContainer>
-          <Name>You</Name>
-          <Ready className={props.isReady ? '' : 'not-ready'}>{props.isReady ? 'Ready' : 'Not Ready'}</Ready>
-        </TextContainer>
-      </PlayerInfoContainer>
-
-      <PlayerPosition className={getClassName(5)}>
-        <PlayerContainer>
-          <PlayerImage className={'player-image'} image={'images/hud/champions/knight.png'} />
-        </PlayerContainer>
-      </PlayerPosition>
-      <PlayerInfoContainer className={getClassName(5)}>
-        <ProfileBox className={true ? 'leader' : ''} image={thumbnailImage} />
-        <TextContainer>
-          <Name>You</Name>
-          <Ready className={props.isReady ? '' : 'not-ready'}>{props.isReady ? 'Ready' : 'Not Ready'}</Ready>
-        </TextContainer>
-      </PlayerInfoContainer> */}
+      <Player index={0} standingImage={standingImage} thumbnailImage={thumbnailImage} displayName={displayName} />
+      <Player
+        index={1}
+        standingImage={'images/hud/champions/berserker.png'}
+        thumbnailImage={thumbnailImage}
+        displayName={'DisplayName'}
+      />
+      <Player
+        index={2}
+        standingImage={'images/hud/champion/amazon.png'}
+        thumbnailImage={thumbnailImage}
+        displayName={'DisplayName'}
+      />
+      <Player
+        index={3}
+        standingImage={'images/hud/champions/amazon.png'}
+        thumbnailImage={thumbnailImage}
+        displayName='DisplayName'
+      />
+      <Player
+        index={4}
+        standingImage={'images/hud/champions/knight.png'}
+        thumbnailImage={thumbnailImage}
+        displayName={'DisplayName'}
+      />
+      <Player
+        index={5}
+        standingImage={'images/hud/champions/knight.png'}
+        thumbnailImage={thumbnailImage}
+        displayName={'DisplayName'}
+      />
+      <Player
+        index={6}
+        standingImage={'images/hud/champions/celt.png'}
+        thumbnailImage={thumbnailImage}
+        displayName={'DisplayName'}
+      />
+      <Player
+        index={7}
+        standingImage={'images/hud/champions/berserker.png'}
+        thumbnailImage={thumbnailImage}
+        displayName={'DisplayName'}
+      />
+      <Player
+        index={8}
+        standingImage={'images/hud/champions/amazon.png'}
+        thumbnailImage={thumbnailImage}
+        displayName={'DisplayName'}
+      />
+      <Player
+        index={9}
+        standingImage={'images/hud/champions/celt.png'}
+        thumbnailImage={thumbnailImage}
+        displayName={'DisplayName'}
+      />
     </Container>
   );
+}
+
+function Player(props: { index: number, standingImage: string, thumbnailImage: string, displayName: string }) {
+  const className = getClassName(props.index);
+  return (
+    <>
+      <PlayerPosition className={className}>
+        <PlayerContainer>
+          <PlayerImage className={'player-image'} image={props.standingImage} />
+        </PlayerContainer>
+      </PlayerPosition>
+      <PlayerInfoContainer className={className}>
+        <ProfileBox className={true ? 'leader' : ''} image={props.thumbnailImage} />
+        <TextContainer>
+          <Name>{props.displayName}</Name>
+        </TextContainer>
+      </PlayerInfoContainer>
+    </>
+  )
 }

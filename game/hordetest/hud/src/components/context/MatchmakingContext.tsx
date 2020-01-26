@@ -182,7 +182,6 @@ export class MatchmakingContextProvider extends React.Component<{}, MatchmakingC
     }
   }
 
-    
   private tryConnect(host: string, port: number, tries: number) {
     game.connectToServer(host, port);
     window.setTimeout(() => this.checkConnected(host, port, ++tries), 500);
