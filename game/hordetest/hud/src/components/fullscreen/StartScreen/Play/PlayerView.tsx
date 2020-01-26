@@ -10,9 +10,10 @@ import { styled } from '@csegames/linaria/react';
 import { ChampionCostumeInfo, ChampionInfo } from '@csegames/library/lib/hordetest/graphql/schema';
 
 import { MyUserContext } from 'context/MyUserContext';
-import { WarbandContext } from 'context/WarbandContext';
+import { WarbandContext, PartialGroupMemberState } from 'context/WarbandContext';
 import { ColossusProfileContext } from 'context/ColossusProfileContext';
 import { ChampionInfoContext } from 'context/ChampionInfoContext';
+import { MatchmakingContext, PlayerNumberMode } from 'context/MatchmakingContext';
 
 const Container = styled.div`
   display: flex;
@@ -20,56 +21,19 @@ const Container = styled.div`
   height: calc(100% - 95px);
 `;
 
-const PlayerPosition = styled.div`
+const TenManGroupContainer = styled.div`
   position: absolute;
+  display: flex;
+`;
+
+const PlayerPosition = styled.div`
   left: 50%;
   width: 300px;
   height: 500px;
   pointer-events: none;
 
-  &.tenman {
-    &.Zero {
-
-    }
-
-    &.One {
-
-    }
-
-    &.Two {
-
-    }
-
-    &.Three {
-
-    }
-
-    &.Four {
-
-    }
-
-    &.Five {
-
-    }
-
-    &.Six {
-
-    }
-
-    &.Seven {
-
-    }
-
-    &.Eight {
-
-    }
-
-    &.Nine {
-
-    }
-  }
-
   &.sixman {
+    position: absolute;
     &.Zero {
       transform: translateX(-50%);
       z-index: 10;
@@ -228,46 +192,12 @@ export interface Props {
   isReady: boolean;
 }
 
-function getClassName(index: number) {
-  switch (index) {
-    case 0: {
-      return 'Zero';
-    };
-    case 1: {
-      return 'One';
-    }
-    case 2: {
-      return 'Two';
-    }
-    case 3: {
-      return 'Three';
-    }
-    case 4: {
-      return 'Four';
-    }
-    case 5: {
-      return 'Five';
-    }
-    case 6: {
-      return 'Six';
-    }
-    case 7: {
-      return 'Seven';
-    }
-    case 8: {
-      return 'Eight';
-    }
-    case 9: {
-      return 'Nine';
-    }
-  }
-}
-
 export function PlayerView(props: Props) {
   const warbandContextState = useContext(WarbandContext);
   const colossusProfileContext = useContext(ColossusProfileContext);
   const championInfoContext = useContext(ChampionInfoContext);
   const myUserContext = useContext(MyUserContext);
+  const matchmakingContext = useContext(MatchmakingContext);
   const champions = getChampions();
 
   function getSortedMembers() {
@@ -306,31 +236,12 @@ export function PlayerView(props: Props) {
   }
 
   if (warbandContextState.groupID) {
-    return (
-      <Container>
-        {getSortedMembers().map((player, i) => {
-          return (
-            <>
-              <PlayerPosition className={getClassName(i)}>
-                <PlayerContainer>
-                  <PlayerImage
-                    className={'player-image'}
-                    image={'images/fullscreen/startscreen/human-m-blackguard.png'}
-                  />
-                </PlayerContainer>
-              </PlayerPosition>
-              <PlayerInfoContainer className={getClassName(i)}>
-                <ProfileBox className={player.isLeader ? 'leader' : ''} image={''} />
-                <TextContainer>
-                  <Name>{player.name}</Name>
-                  <Ready className={player.isReady ? '' : 'not-ready'}>{player.isReady ? 'Ready' : 'Not Ready'}</Ready>
-                </TextContainer>
-              </PlayerInfoContainer>
-            </>
-          );
-        })}
-      </Container>
-    );
+    const sortedGroupMembers = getSortedMembers();
+    if (matchmakingContext.selectedPlayerNumberMode === PlayerNumberMode.SixMan) {
+      return <SixManView groupMembers={sortedGroupMembers} />;
+    }
+
+    return <TenManView groupMembers={sortedGroupMembers} />;
   }
 
   const defaultChampion = getMyDefaultChampion();
@@ -400,15 +311,14 @@ export function PlayerView(props: Props) {
 }
 
 function Player(props: { index: number, standingImage: string, thumbnailImage: string, displayName: string }) {
-  const className = getClassName(props.index);
   return (
     <>
-      <PlayerPosition className={className}>
+      <PlayerPosition className={''}>
         <PlayerContainer>
           <PlayerImage className={'player-image'} image={props.standingImage} />
         </PlayerContainer>
       </PlayerPosition>
-      <PlayerInfoContainer className={className}>
+      <PlayerInfoContainer className={''}>
         <ProfileBox className={true ? 'leader' : ''} image={props.thumbnailImage} />
         <TextContainer>
           <Name>{props.displayName}</Name>
@@ -416,4 +326,84 @@ function Player(props: { index: number, standingImage: string, thumbnailImage: s
       </PlayerInfoContainer>
     </>
   )
+}
+
+function SixManView(props: { groupMembers: PartialGroupMemberState[] }) {
+  function getClassName(index: number) {
+    const modeType = 'sixman';
+    switch (index) {
+      case 0: {
+        return `${modeType} Zero`;
+      };
+      case 1: {
+        return `${modeType} One`;
+      }
+      case 2: {
+        return `${modeType} Two`;
+      }
+      case 3: {
+        return `${modeType} Three`;
+      }
+      case 4: {
+        return `${modeType} Four`;
+      }
+      case 5: {
+        return `${modeType} Five`;
+      }
+      case 6: {
+        return `${modeType} Six`;
+      }
+      case 7: {
+        return `${modeType} Seven`;
+      }
+      case 8: {
+        return `${modeType} Eight`;
+      }
+      case 9: {
+        return `${modeType} Nine`;
+      }
+    }
+  }
+
+  return (
+    <Container>
+      {props.groupMembers.map((player, i) => {
+        return (
+          <>
+            <PlayerPosition className={getClassName(i)}>
+              <PlayerContainer>
+                <PlayerImage
+                  className={'player-image'}
+                  image={'images/fullscreen/startscreen/human-m-blackguard.png'}
+                />
+              </PlayerContainer>
+            </PlayerPosition>
+            <PlayerInfoContainer className={getClassName(i)}>
+              <ProfileBox className={player.isLeader ? 'leader' : ''} image={''} />
+              <TextContainer>
+                <Name>{player.name}</Name>
+                <Ready className={player.isReady ? '' : 'not-ready'}>{player.isReady ? 'Ready' : 'Not Ready'}</Ready>
+              </TextContainer>
+            </PlayerInfoContainer>
+          </>
+        );
+      })}
+    </Container>
+  );
+}
+
+function TenManView(props: { groupMembers: PartialGroupMemberState[] }) {
+  const firstHalf = props.groupMembers.slice(0, 5);
+  const secondHalf = props.groupMembers.slice(5, 10);
+  return (
+    <Container>
+      <TenManGroupContainer>
+        {firstHalf.map((member) => {
+          return (
+            
+          );
+        })}
+      </TenManGroupContainer>
+    </Container>
+  );
 }

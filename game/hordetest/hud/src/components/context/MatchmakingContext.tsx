@@ -19,6 +19,11 @@ import { Route, fullScreenNavigateTo } from 'context/FullScreenNavContext';
 import { ErrorComponent } from 'components/fullscreen/Error';
 import { query } from '@csegames/library/lib/_baseGame/graphql/query'
 
+export enum PlayerNumberMode {
+  SixMan,
+  TenMan,
+}
+
 export function onMatchmakingUpdate(callback: (matchmakingUpdate: IMatchmakingUpdate) => any): EventHandle {
   return game.on('subscription-matchmakingUpdates', callback);
 }
@@ -68,6 +73,8 @@ export interface MatchmakingContextState {
   // Error
   error: string;
   errorCode: number
+
+  selectedPlayerNumberMode: PlayerNumberMode;
 }
 
 const getDefaultMatchmakingContextState = (): MatchmakingContextState => ({
@@ -83,7 +90,8 @@ const getDefaultMatchmakingContextState = (): MatchmakingContextState => ({
   error: null,
   errorCode: 0,
   isWaitingOnServer: false,
-  timeSearching: 0
+  timeSearching: 0,
+  selectedPlayerNumberMode: PlayerNumberMode.TenMan,
 });
 
 export const MatchmakingContext = React.createContext(getDefaultMatchmakingContextState());
