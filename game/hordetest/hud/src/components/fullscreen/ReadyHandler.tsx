@@ -47,10 +47,16 @@ export class ReadyHandler extends React.Component<Props, State> {
   public render() {
     return (
       <Container>
-        {imagePreloader.map(() => {
-
+        {imagePreloader.map((imageURL) => {
+          return (
+            <img src={imageURL} onLoad={onLoad} />
+          );
         })}
       </Container>
     );
+  }
+
+  private onLoad = () => {
+    
   }
 }
