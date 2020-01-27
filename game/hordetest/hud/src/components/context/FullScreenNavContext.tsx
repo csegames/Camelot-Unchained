@@ -61,7 +61,7 @@ export class FullScreenNavContextProvider extends React.Component<Props, FullScr
 
   private navigateTo = (route: Route) => {
     console.log(`Navigating fullscreen to ${Route[route]}`);
-    this.setState({ currentRoute: route });
+    this.setState({ currentRoute: Route.ChampionSelect });
   }
 
   private getDefaultRoute = () => {
