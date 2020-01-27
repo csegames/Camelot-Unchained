@@ -90,15 +90,15 @@ export function LockedList(props: Props) {
     const playerStates = Object.values(championSelectContext.playerStates);
     if (props.type === 'right') {
       return playerStates.slice(0, 5);
-    } else if (props.type === 'left' && playerStates.length > 5) {
-      return playerStates.slice(5, 10);
+    } else if (props.type === 'left') {
+      return playerStates.slice(0, 5);
     } else {
       return [];
     }
   }
 
   const playerStateList = getPlayerStateList();
-  return playerStateList.length > 0 ? (
+  return (
     <Container>
       {playerStateList.map((player) => {
         const lockedClass = player.isLocked ? 'locked' : '';
@@ -106,14 +106,40 @@ export function LockedList(props: Props) {
         const championCostumeInfo = championContext.championCostumes.find(c => c.requiredChampionID === championInfo.id);
 
         return (
-          <ListItem className={lockedClass}>
-            <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
-            <NameOfPlayer>
-              {player.displayName ? `${player.displayName} -` : ''} {championInfo ? championInfo.name : ''}
-            </NameOfPlayer>
-          </ListItem>
+          <>
+            <ListItem className={lockedClass}>
+              <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
+              <NameOfPlayer>
+                {player.displayName ? `${player.displayName} -` : ''} {championInfo ? championInfo.name : ''}
+              </NameOfPlayer>
+            </ListItem>
+            <ListItem className={lockedClass}>
+              <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
+              <NameOfPlayer>
+                {player.displayName ? `${player.displayName} -` : ''} {championInfo ? championInfo.name : ''}
+              </NameOfPlayer>
+            </ListItem>
+            <ListItem className={'locked'}>
+              <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
+              <NameOfPlayer>
+                {player.displayName ? `${player.displayName} -` : ''} {championInfo ? championInfo.name : ''}
+              </NameOfPlayer>
+            </ListItem>
+            <ListItem className={'locked'}>
+              <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
+              <NameOfPlayer>
+                {player.displayName ? `${player.displayName} -` : ''} {championInfo ? championInfo.name : ''}
+              </NameOfPlayer>
+            </ListItem>
+            <ListItem className={lockedClass}>
+              <BGImage src={championCostumeInfo ? championCostumeInfo.championSelectImageURL : ""} />
+              <NameOfPlayer>
+                {player.displayName ? `${player.displayName} -` : ''} {championInfo ? championInfo.name : ''}
+              </NameOfPlayer>
+            </ListItem>
+          </>
         );
       })}
     </Container>
-  ) : null;
+  );
 }

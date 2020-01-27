@@ -28,7 +28,7 @@ export interface Props {
 }
 
 const getDefaultFullScreenNavContextState = (): FullScreenNavContextState => ({
-  currentRoute: Route.Start,
+  currentRoute: Route.ChampionSelect,
 });
 
 export const FullScreenNavContext = React.createContext(getDefaultFullScreenNavContextState());
@@ -60,11 +60,12 @@ export class FullScreenNavContextProvider extends React.Component<Props, FullScr
   }
 
   private navigateTo = (route: Route) => {
-    console.log(`Navigating fullscreen to ${Route[route]}`)
+    console.log(`Navigating fullscreen to ${Route[route]}`);
     this.setState({ currentRoute: route });
   }
 
   private getDefaultRoute = () => {
+    return Route.ChampionSelect;
     if (this.shouldPlayIntroVideo()) {
       return Route.IntroVideo;
     }

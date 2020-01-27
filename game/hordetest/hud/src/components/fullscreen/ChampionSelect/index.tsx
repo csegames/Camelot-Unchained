@@ -262,7 +262,7 @@ export function ChampionSelect(props: Props) {
         </SelectedChampionContainer>
 
         <ChampionInfoContainer>
-          <ChampionInfo selectedChampion={selectedChampion} />
+          {selectedChampion && <ChampionInfo selectedChampion={selectedChampion} />}
         </ChampionInfoContainer>
 
         <LockedListContainer className='right'>
