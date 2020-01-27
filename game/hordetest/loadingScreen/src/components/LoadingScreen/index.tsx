@@ -16,20 +16,9 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
   background-image: url(../images/bg.jpg);
-  background-size: cover;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
   background-color: black;
-`;
-
-const Logo = styled.div`
-  position: fixed;
-  left: 60px;
-  bottom: 32px;
-  width: 252px;
-  height: 66px;
-  background-image: url(../images/logo.png);
-  background-size: contain;
-  background-repeat: no-repeat;
 `;
 
 const LoadingTextPosition = styled.div`
@@ -38,6 +27,21 @@ const LoadingTextPosition = styled.div`
   bottom: 10px;
   display: flex;
   align-items: center;
+  opacity: 0;
+
+  &.animate {
+    animation: fadeIn 0.5s forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 const Text = styled.div`
@@ -54,22 +58,24 @@ export interface Props {
 
 export interface State {
   loadingState: LoadingState;
+  playTransitionAnimation: boolean;
 }
 
 export class LoadingScreen extends React.Component<Props, State> {
   private loadingStateHandle: EventHandle;
+  private readyStateTimeout: number;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       loadingState: null,
+      playTransitionAnimation: false,
     };
   }
 
   public render() {
     return this.state.loadingState && this.state.loadingState.visible ? (
-      <Container>
-        <Logo />
+      <Container className={this.state.playTransitionAnimation ? 'animate' : ''}>
         <LoadingTextPosition>
           <Text>{this.state.loadingState.message}</Text>
 
@@ -80,6 +86,7 @@ export class LoadingScreen extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
+    this.handleReadyState();
     this.loadingStateHandle = game.loadingState.onUpdated(() => {
       this.setState({ loadingState: game.loadingState });
     });
@@ -88,5 +95,14 @@ export class LoadingScreen extends React.Component<Props, State> {
   public componentWillUnmount() {
     this.loadingStateHandle.clear();
     this.loadingStateHandle = null;
+
+    window.clearTimeout(this.readyStateTimeout);
+  }
+
+  private handleReadyState = () => {
+    this.readyStateTimeout = window.setTimeout(() => {
+      engine.trigger('OnReadyForDisplay');
+      this.setState({ playTransitionAnimation: true });
+    }, 5000);
   }
 }

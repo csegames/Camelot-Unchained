@@ -321,6 +321,12 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
     this.resetEVH = game.on('reset-fullscreen', this.resetFullscreen);
     this.networkFailureEVH = game.onNetworkFailure(this.handleNetworkFailure);
 
+    console.log('HUD Mounted');
+    window.setTimeout(() => {
+      console.log('HUD READY');
+      engine.trigger('OnReadyForDisplay');
+    }, 20000);
+
     if (game.isConnectedOrConnectingToServer) {
       this.beginWaitingForAServerFromMatchmaking()
     }
