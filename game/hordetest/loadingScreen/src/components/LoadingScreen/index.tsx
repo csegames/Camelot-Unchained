@@ -63,20 +63,21 @@ export interface State {
 
 export class LoadingScreen extends React.Component<Props, State> {
   private loadingStateHandle: EventHandle;
+  private preloadAssetsTimeout: number;
   private readyStateTimeout: number;
 
   constructor(props: Props) {
     super(props);
     this.state = {
       loadingState: null,
-      playTransitionAnimation: false,
+      playTransitionAnimation: true,
     };
   }
 
   public render() {
     return this.state.loadingState && this.state.loadingState.visible ? (
-      <Container className={this.state.playTransitionAnimation ? 'animate' : ''}>
-        <LoadingTextPosition>
+      <Container>
+        <LoadingTextPosition className={this.state.playTransitionAnimation ? 'animate' : ''}>
           <Text>{this.state.loadingState.message}</Text>
 
           <LoadingAnimIcon />
@@ -96,13 +97,18 @@ export class LoadingScreen extends React.Component<Props, State> {
     this.loadingStateHandle.clear();
     this.loadingStateHandle = null;
 
+    window.clearTimeout(this.preloadAssetsTimeout);
     window.clearTimeout(this.readyStateTimeout);
   }
 
   private handleReadyState = () => {
+    this.preloadAssetsTimeout = window.setTimeout(() => {
+      this.setState({ playTransitionAnimation: false });
+    }, 1000);
+
     this.readyStateTimeout = window.setTimeout(() => {
       engine.trigger('OnReadyForDisplay');
       this.setState({ playTransitionAnimation: true });
-    }, 5000);
+    }, 3000);
   }
 }
