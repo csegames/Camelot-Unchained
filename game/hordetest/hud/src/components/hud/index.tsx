@@ -35,6 +35,7 @@ import { RuneFullScreenEffects } from './FullScreenEffects/Runes';
 import { MenuModal } from '../fullscreen/MenuModal';
 import { LeftModal } from '../fullscreen/LeftModal';
 import { RightModal } from '../fullscreen/RightModal';
+import { Preloader } from '../fullscreen/Preloader';
 
 import { ErrorComponent } from '../fullscreen/Error';
 import { ActionAlert } from '../shared/ActionAlert';
@@ -191,6 +192,7 @@ interface Props {
 }
 
 export interface State {
+  isLoadingFinished: boolean;
   isLobbyVisible: boolean;
   scenarioID: string;
 }
@@ -206,6 +208,7 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      isLoadingFinished: false,
       // Show the lobby by default if we are not connected or connecting to a game server
       isLobbyVisible: !game.isConnectedOrConnectingToServer,
       scenarioID: '',
@@ -216,6 +219,7 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
     if (this.state.isLobbyVisible) {
       return (
         <FullScreenContextProviders>
+          {!this.state.isLoadingFinished ? <Preloader onLoadComplete={this.handleLoadComplete} /> : null}
           <FullScreen scenarioID={this.state.scenarioID} onSelectionTimeOver={this.beginWaitingForAServerFromMatchmaking} />
 
           <MenuModal />
@@ -321,10 +325,6 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
     this.resetEVH = game.on('reset-fullscreen', this.resetFullscreen);
     this.networkFailureEVH = game.onNetworkFailure(this.handleNetworkFailure);
 
-    window.setTimeout(() => {
-      engine.trigger('OnReadyForDisplay');
-    }, 10000);
-
     if (game.isConnectedOrConnectingToServer) {
       this.beginWaitingForAServerFromMatchmaking()
     }
@@ -411,6 +411,13 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
     else {
       console.log("Tried to reset fullscreen while connected or connecting to a game! If we did that, we would pop the lobby up during a game. Ignoring request");
     }
+  }
+
+  private handleLoadComplete = () => {
+    window.setTimeout(() => {
+      this.setState({ isLoadingFinished: true });
+      engine.trigger('OnReadyForDisplay');
+    }, 3000);
   }
 }
 
