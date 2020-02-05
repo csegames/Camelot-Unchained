@@ -40,10 +40,10 @@ export function initChat(serverHost: string) {
   window.chat.connect();
 }
 
-export function useChat(serverHost: string) {
+export function useChat() {
   if (!window.chat) {
     window.chat = new CSEChat();
-    setTimeout(() => initChat(serverHost), 1000);
+    setTimeout(() => initChat(game.serverHost), 1000);
   }
   return window.chat;
 }

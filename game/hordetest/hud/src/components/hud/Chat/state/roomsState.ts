@@ -8,7 +8,6 @@ import * as React from 'react';
 import { OptionsState } from './optionsState';
 import { useChat } from './chat';
 import { useChatTabs } from './tabsState';
-import { MatchmakingContext } from 'context/MatchmakingContext';
 
 export interface Room extends RoomInfo {
   joined: boolean;
@@ -57,8 +56,7 @@ export function useRoomsState(opts: OptionsState, observedKeys: string[] = null)
   if (!sharedState.state) {
     sharedState.state = initialState(opts);
   }
-  const matchmakingContext = React.useContext(MatchmakingContext);
-  const chat = useChat((matchmakingContext && matchmakingContext.host) || game.serverHost);
+  const chat = useChat();
   const [tabs, setTabsState] = useChatTabs();
 
   const [state, set] = React.useState(sharedState.state);
@@ -76,6 +74,8 @@ export function useRoomsState(opts: OptionsState, observedKeys: string[] = null)
 
     const handles = [] as EventHandle[];
     handles.push(chat.onChatMessage(msg => {
+      console.log('on chat message');
+      console.log(msg);
       if (!sharedState.messages[msg.targetID]) {
         sharedState.messages[msg.targetID] = new CircularArray<ChatMessage>(opts.messageBufferSize);
       }
