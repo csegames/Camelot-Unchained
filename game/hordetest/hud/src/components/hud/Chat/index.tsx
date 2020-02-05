@@ -26,9 +26,14 @@ export interface Props {
 export function Chat(props: Props) {
   const [panes] = useChatPanes();
   const panesArr = Object.values(panes.panes);
-  return (
-    <Screen id='chat'>
-      {panesArr.map(pane => <Pane key={pane.id} pane={pane.id} />)}
-    </Screen>
-  );
+
+  if (game.isConnectedToServer) {
+    return (
+      <Screen id='chat'>
+        {panesArr.map(pane => <Pane key={pane.id} pane={pane.id} />)}
+      </Screen>
+    );
+  } else {
+    return null;
+  }
 }

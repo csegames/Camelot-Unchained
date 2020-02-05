@@ -24,6 +24,7 @@ import { RequestResult } from '@csegames/library/lib/_baseGame';
 import { Route, fullScreenNavigateTo } from 'context/FullScreenNavContext';
 import { ErrorComponent } from 'components/fullscreen/Error';
 import { ReconnectComponent } from 'components/fullscreen/Reconnect';
+import { initChat } from 'components/HUD/Chat/state/chat';
 
 export enum PlayerNumberMode {
   SixMan,
@@ -312,6 +313,7 @@ export class MatchmakingContextProvider extends React.Component<{}, MatchmakingC
 
   private tryConnect = (host: string, port: number, tries: number) => {
     game.connectToServer(host, port);
+    initChat(host);
     window.setTimeout(() => this.checkConnected(host, port, ++tries), 500);
   }
 

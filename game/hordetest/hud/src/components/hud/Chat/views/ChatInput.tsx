@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { styled } from '@csegames/linaria/react';
 import { parseMessageForSlashCommand } from '@csegames/library/lib/_baseGame';
 
@@ -13,6 +13,7 @@ import { View } from '../state/viewsState';
 import { useChatOptions } from '../state/optionsState';
 import { useRoomsState, RoomsState } from '../state/roomsState';
 import { useChat } from '../state/chat';
+import { MatchmakingContext } from 'context/MatchmakingContext';
 
 type InputProps = { color: string; fontFamily: string; } & React.HTMLProps<HTMLInputElement>;
 const Input = styled.textarea`
@@ -73,8 +74,9 @@ export interface Props {
 }
 
 export function ChatInput(props: Props) {
+  const matchmakingContext = useContext(MatchmakingContext);
   const theme = useChatTheme();
-  const chat = useChat();
+  const chat = useChat((matchmakingContext && matchmakingContext.host) || game.serverHost);
   const [opts] = useChatOptions();
   const [rooms] = useRoomsState(opts);
   const [value, setValue] = useState('');

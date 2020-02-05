@@ -4,13 +4,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useRef, useContext } from 'react';
 import { styled } from '@csegames/linaria/react';
 import { useChatOptions } from '../state/optionsState';
 import { useRoomsState } from '../state/roomsState';
 import { ChatLine } from './ChatLine';
 import { useChat } from '../state/chat';
 import { View } from '../state/viewsState';
+import { MatchmakingContext } from 'context/MatchmakingContext';
 
 type LVProps = { show: boolean; } & React.HTMLProps<HTMLDivElement>;
 const ListViewContainer = styled.div`
@@ -51,8 +52,8 @@ export interface Props {
 }
 
 export function ScrollView(props: Props) {
-
-  const chat = useChat();
+  const matchmakingContext = useContext(MatchmakingContext);
+  const chat = useChat((matchmakingContext && matchmakingContext.host) || game.serverHost);
   const [opts] = useChatOptions();
   const [rooms] = useRoomsState(opts);
   const [bounds, setBounds] = useState({

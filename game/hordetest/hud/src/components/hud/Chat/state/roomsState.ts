@@ -8,6 +8,7 @@ import * as React from 'react';
 import { OptionsState } from './optionsState';
 import { useChat } from './chat';
 import { useChatTabs } from './tabsState';
+import { MatchmakingContext } from 'context/MatchmakingContext';
 
 export interface Room extends RoomInfo {
   joined: boolean;
@@ -56,8 +57,8 @@ export function useRoomsState(opts: OptionsState, observedKeys: string[] = null)
   if (!sharedState.state) {
     sharedState.state = initialState(opts);
   }
-
-  const chat = useChat();
+  const matchmakingContext = React.useContext(MatchmakingContext);
+  const chat = useChat((matchmakingContext && matchmakingContext.host) || game.serverHost);
   const [tabs, setTabsState] = useChatTabs();
 
   const [state, set] = React.useState(sharedState.state);
@@ -86,7 +87,8 @@ export function useRoomsState(opts: OptionsState, observedKeys: string[] = null)
           ...sharedState.state.rooms,
           [msg.targetID]: {
             ...sharedState.state.rooms[msg.targetID],
-            messageCounter: sharedState.state.rooms[msg.targetID].messageCounter + 1,
+            messageCounter: sharedState.state.rooms[msg.targetID] ?
+              sharedState.state.rooms[msg.targetID].messageCounter + 1 : 1,
           }
         }
       })
@@ -144,8 +146,6 @@ export function useRoomsState(opts: OptionsState, observedKeys: string[] = null)
       sharedState.setters.push(set);
     }
   }
-
-  
 
   function setState(state: RoomsState) {
     for (let i = 0; i < sharedState.observedSetters.length; ++i) {
