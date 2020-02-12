@@ -131,7 +131,7 @@ async function batchedQuery<T>(options?: Partial<QueryOptions>): Promise<void> {
   try {
 
     const response = await httpRequest('post',
-      getMockModeUrl(opts.url),
+      opts.url,
       {},
       body,
       {
@@ -208,7 +208,7 @@ export async function query<T>(query: GraphQLQuery, options?: Partial<QueryOptio
   try {
 
     const response = await httpRequest('post',
-      getMockModeUrl(opts.url),
+      opts.url,
       {},
       {
         ...q,
@@ -275,7 +275,6 @@ export async function query<T>(query: GraphQLQuery, options?: Partial<QueryOptio
       console.error(response.data);
       console.error(new Error().stack)
     }
-    
 
     if (game.debug) {
       console.group('GraphQL Request');

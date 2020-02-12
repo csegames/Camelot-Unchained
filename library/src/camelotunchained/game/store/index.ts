@@ -7,11 +7,12 @@
 /**
  * Game Data Store holds mostly static game data that is initially fetched from the API server on UI load.
  */
-import { useState } from 'react';
+
+import gql from 'graphql-tag';
 import { query } from '../../../_baseGame/graphql/query';
 import { CUQuery, Ability, StatusDef } from '../../graphql/schema';
 
-const queryString = `
+const queryString = gql`
 {
   myCharacter {
     abilities {

@@ -275,8 +275,6 @@ class TradeContainer extends React.Component<TradeDropContainerComponentProps, T
         const tradeItem = { ItemID: _tradeItem.id, UnitCount: _tradeItem.stats.item.unitCount };
         const res = webAPI.SecureTradeAPI.AddItem(
           webAPI.defaultConfig,
-          game.shardID,
-          camelotunchained.game.selfPlayerState.characterID,
           tradeItem.ItemID,
           tradeItem.UnitCount,
         );

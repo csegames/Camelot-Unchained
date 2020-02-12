@@ -121,12 +121,7 @@ class VoxInventory extends React.Component<Props, ContextState> {
             voxSlot: 'Invalid',
           },
         };
-        webAPI.ItemAPI.MoveItems(
-          webAPI.defaultConfig,
-          game.shardID,
-          camelotunchained.game.selfPlayerState.characterID,
-          moveReq as any,
-        );
+        webAPI.ItemAPI.MoveItems(webAPI.defaultConfig, moveReq as any);
         return;
       } else {
         slotNumberToItem[currentPosition] = {
