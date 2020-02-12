@@ -8,7 +8,7 @@ import * as React from 'react';
 import * as _ from 'lodash';
 
 import { ContextMenu } from 'shared/ContextMenu';
-import AbilityButtonView, { AbilityButtonInfo } from './AbilityButtonView';
+import { AbilityButtonView, AbilityButtonInfo } from './AbilityButtonView';
 import AbilityStateConnector from './AbilityStateConnector';
 import {
   getTimingEnd,

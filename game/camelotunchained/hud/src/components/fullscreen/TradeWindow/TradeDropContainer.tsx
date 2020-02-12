@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 import { styled } from '@csegames/linaria/react';
 import { webAPI } from '@csegames/library/lib/camelotunchained';
 
-import LockedOverlay from './LockedOverlay';
+import { LockedOverlay } from './LockedOverlay';
 import withDragAndDrop, { DragAndDropInjectedProps, DragEvent } from 'utils/DragAndDrop/DragAndDrop';
 import InventoryRow from '../Inventory/components/InventoryRow';
 import { SlotType, InventorySlotItemDef, SlotItemDefType } from 'fullscreen/lib/itemInterfaces';

@@ -247,6 +247,18 @@ export async function query<T>(query: GraphQLQuery, options?: Partial<QueryOptio
           console.log(JSON.stringify(response));
           console.groupEnd();
         }
+      } else {
+        console.log(
+          'SUCESSSSSSS:',
+          {
+            errors: result.errors.map(getMessage).join(' '),
+            query: q.query,
+            operationName: q.operationName,
+            namedQuery: q.namedQuery,
+            useNamedQueryCache: q.useNamedQueryCache,
+            variables: JSON.stringify(q.variables),
+          },
+        );
       }
       return {
         data: result.data as T,

@@ -11,7 +11,7 @@ import { webAPI } from '@csegames/library/lib/camelotunchained';
 import { GraphQL, GraphQLResult } from '@csegames/library/lib/_baseGame/graphql/react';
 import { InventoryItemFragment } from 'gql/fragments/InventoryItemFragment';
 import { VoxInventoryQuery, InventoryItem } from 'gql/interfaces';
-import VoxInventoryView from './VoxInventoryView';
+import { VoxInventoryView } from './VoxInventoryView';
 import { InventoryContext } from 'fullscreen/ItemShared/InventoryContext';
 import { VoxInventoryContext, ContextState, defaultVoxContextState } from './VoxInventoryContext';
 import { DrawerSlotNumberToItem, ContainerIdToDrawerInfo } from 'fullscreen/ItemShared/InventoryBase';
