@@ -44,7 +44,7 @@ module.exports = {
       },
       hordetest: {
         default: {
-          script: "nps report.start && nps build.webpack.hordetest && nps report.success",
+          script: "nps report.start && jest && nps build.webpack.hordetest && nps report.success",
           description: "Builds the HordeTest HUD UI",
         },
         dev: {
