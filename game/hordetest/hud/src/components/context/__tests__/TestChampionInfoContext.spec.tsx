@@ -9,7 +9,6 @@ import { shallow } from 'enzyme';
 import { ChampionCostumeInfo, ChampionInfo } from '@csegames/library/lib/hordetest/graphql/schema';
 import {
   ChampionInfoContextProvider,
-  ChampionInfoContextState,
   getDefaultChampionInfoContextState,
 } from '../ChampionInfoContext';
 
@@ -60,6 +59,7 @@ describe('ChampionInfoProvider handleQueryResult', () => {
     const wrapper = shallow(<ChampionInfoContextProvider></ChampionInfoContextProvider>);
     const graphql = {
       data: {
+        championCostumes: "",
         this123: null,
         is123: null,
         bad123: null,

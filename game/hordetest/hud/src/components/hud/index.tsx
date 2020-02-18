@@ -9,6 +9,7 @@ import { styled } from '@csegames/linaria/react';
 
 import { ContextProviders, FullScreenContextProviders } from '../context';
 import { FullScreenNavContext, FullScreenNavContextState, fullScreenNavigateTo, Route } from 'context/FullScreenNavContext';
+import { MyUserContext, MyUserContextState } from 'context/MyUserContext';
 import { MatchmakingContext, MatchmakingContextState } from 'components/context/MatchmakingContext';
 import { Chat } from './Chat';
 import { initChat, disconnectChat } from './Chat/state/chat';
@@ -44,9 +45,9 @@ import { ActionAlert } from '../shared/ActionAlert';
 import { ExtraButtons } from './ExtraButtons';
 import { UrgentMessage } from './UrgentMessage';
 import { Mocks } from './Mocks';
+import { SetDisplayName } from '../fullscreen/SetDisplayName';
 
 // import { LowHealthFullScreenEffects } from './FullScreenEffects/LowHealth';
-
 
 const Container = styled.div`
   position: relative;
@@ -193,6 +194,7 @@ const ExtraButtonsPosition = styled.div`
 interface Props {
   fullScreenNavContext: FullScreenNavContextState;
   matchmakingContext: MatchmakingContextState;
+  myUserContext: MyUserContextState;
 }
 
 export interface State {
@@ -482,6 +484,16 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
       engine.trigger('OnReadyForDisplay');
       window.clearTimeout(this.loadTimeout);
     }, 3000);
+
+    if (!this.props.myUserContext.myUser.displayName) {
+      console.log('User doesnt have displayName set. Show modal so they are forced to input it.');
+      game.trigger(
+        'show-middle-modal',
+        <SetDisplayName onDisplayNameSet={this.props.myUserContext.refetch} />,
+        false,
+        true,
+      );
+    }
   }
 
   private onTotalApiNetworkFailure = () => {
@@ -501,7 +513,12 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
 export function HUD() {
   const fullScreenNavContext = useContext(FullScreenNavContext);
   const matchmakingContext = useContext(MatchmakingContext);
+  const myUserContext = useContext(MyUserContext);
   return (
-    <HUDWithInjectedContext fullScreenNavContext={fullScreenNavContext} matchmakingContext={matchmakingContext} />
+    <HUDWithInjectedContext
+      fullScreenNavContext={fullScreenNavContext}
+      matchmakingContext={matchmakingContext}
+      myUserContext={myUserContext}
+    />
   );
 }
