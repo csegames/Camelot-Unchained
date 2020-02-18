@@ -12,7 +12,7 @@ import { ChampionInfo } from '@csegames/library/lib/hordetest/graphql/schema';
 import { Title } from '../../Title';
 import { ColossusProfileContext } from 'context/ColossusProfileContext';
 import { ChampionInfoContext } from 'context/ChampionInfoContext';
-import { formatHourTime } from 'lib/timeHelpers';
+import { formatHourTime } from '../../../../lib/timeHelpers';
 
 const Container = styled.div`
   display: flex;
