@@ -6,36 +6,37 @@
 
 import React from 'react';
 import { shallow } from 'enzyme';
+import { ChampionCostumeInfo, ChampionInfo } from '@csegames/library/lib/hordetest/graphql/schema';
 import {
-  ColossusProfileProvider,
-  ColossusProfileModel,
-  getDefaultColossusProfileState,
-} from '../ColossusProfileContext';
+  ChampionInfoContextProvider,
+  ChampionInfoContextState,
+  getDefaultChampionInfoContextState,
+} from '../ChampionInfoContext';
 
-const defaultContextState = getDefaultColossusProfileState();
+const defaultContextState = getDefaultChampionInfoContextState();
 
 beforeEach(() => {
   jest.resetModules();
 });
 
-describe('ColossusProfileProvider', () => {
+describe('ChampionInfoProvider Initialization', () => {
   it ('Initializes with good state', () => {
-    const wrapper = shallow(<ColossusProfileProvider></ColossusProfileProvider>);
+    const wrapper = shallow(<ChampionInfoContextProvider></ChampionInfoContextProvider>);
     expect(wrapper.state()).toMatchObject(defaultContextState);
   });
 });
 
-describe('ColossusProfileProvider handleQueryResult', () => {
+describe('ChampionInfoProvider handleQueryResult', () => {
   it('Malformed Context State - Null graphql', () => {
-    const wrapper = shallow(<ColossusProfileProvider></ColossusProfileProvider>);
-    const graphql: { data: { colossusProfile: ColossusProfileModel | null } } = null;
+    const wrapper = shallow(<ChampionInfoContextProvider></ChampionInfoContextProvider>);
+    const graphql: { data: { champions: ChampionInfo, championCostumes: ChampionCostumeInfo } } = null;
     (wrapper.instance() as any).handleQueryResult(graphql);
     expect(wrapper.state()).toMatchObject(defaultContextState);
   })
 
   it('Malformed Context State - Null graphql data', () => {
-    const wrapper = shallow(<ColossusProfileProvider></ColossusProfileProvider>);
-    const graphql: { data: { colossusProfile: ColossusProfileModel | null } } = {
+    const wrapper = shallow(<ChampionInfoContextProvider></ChampionInfoContextProvider>);
+    const graphql: { data: { champions: ChampionInfo, championCostumes: ChampionCostumeInfo } } = {
       data: null,
     };
     (wrapper.instance() as any).handleQueryResult(graphql);
@@ -43,10 +44,11 @@ describe('ColossusProfileProvider handleQueryResult', () => {
   });
 
   it ('Malformed Context State - Good graphql data but null data value', () => {
-    const wrapper = shallow(<ColossusProfileProvider></ColossusProfileProvider>);
-    const graphql: { data: { colossusProfile: ColossusProfileModel | null } } = {
+    const wrapper = shallow(<ChampionInfoContextProvider></ChampionInfoContextProvider>);
+    const graphql: { data: { champions: ChampionInfo, championCostumes: ChampionCostumeInfo } } = {
       data: {
-        colossusProfile: null,
+        championCostumes: null,
+        champions: null,
       },
     };
 
@@ -55,16 +57,13 @@ describe('ColossusProfileProvider handleQueryResult', () => {
   });
 
   it ('Malformed Context State - Completely invalid graphql data', () => {
-    const wrapper = shallow(<ColossusProfileProvider></ColossusProfileProvider>);
+    const wrapper = shallow(<ChampionInfoContextProvider></ChampionInfoContextProvider>);
     const graphql = {
       data: {
-        colossusProfile: {
-          lifetimeStats: null,
-          this123: null,
-          is123: null,
-          bad123: null,
-        } as any,
-      }
+        this123: null,
+        is123: null,
+        bad123: null,
+      } as any,
     };
 
     (wrapper.instance() as any).handleQueryResult(graphql);
@@ -72,18 +71,15 @@ describe('ColossusProfileProvider handleQueryResult', () => {
   });
 
   it ('Malformed Context State - Partially invalid graphql data', () => {
-    const wrapper = shallow(<ColossusProfileProvider></ColossusProfileProvider>);
-    const graphql: { data: { colossusProfile: ColossusProfileModel | null } } = {
+    const wrapper = shallow(<ChampionInfoContextProvider></ChampionInfoContextProvider>);
+    const graphql: { data: { champions: ChampionInfo[], championCostumes: ChampionCostumeInfo[] } } = {
       data: {
-        colossusProfile: {
-          defaultChampion: null,
-          lifetimeStats: [],
-          champions: [],
-          this123: null,
-          is123: null,
-          bad123: null,
-        } as ColossusProfileModel,
-      }
+        championCostumes: [],
+        champions: [],
+        this123: null,
+        is123: null,
+        bad123: null,
+      } as any,
     };
 
     (wrapper.instance() as any).handleQueryResult(graphql);
@@ -95,14 +91,11 @@ describe('ColossusProfileProvider handleQueryResult', () => {
   });
 
   it ('Good data', () => {
-    const wrapper = shallow(<ColossusProfileProvider></ColossusProfileProvider>);
-    const graphql: { data: { colossusProfile: ColossusProfileModel | null } } = {
+    const wrapper = shallow(<ChampionInfoContextProvider></ChampionInfoContextProvider>);
+    const graphql: { data: { champions: ChampionInfo[], championCostumes: ChampionCostumeInfo[] } } = {
       data: {
-        colossusProfile: {
-          defaultChampion: null,
-          lifetimeStats: [],
-          champions: [],
-        },
+        champions: [],
+        championCostumes: []
       },
     };
 

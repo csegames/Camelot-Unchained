@@ -98,7 +98,7 @@ export class ColossusProfileProvider extends React.Component<{}, ColossusProfile
         !graphql.data.colossusProfile ||
         !Array.isArray(graphql.data.colossusProfile.champions) ||
         !Array.isArray(graphql.data.colossusProfile.lifetimeStats)) {
-
+      console.error("Missing data, colossusProfile, colossusProfile champions, colossusProfile lifetimeStats query");
       // Query failed or we got some bad data but we don't want to hold up loading. In future, handle this a little better,
       // maybe try to refetch a couple times and if not then just continue on the flow.
       this.onDonePreloading(false);
