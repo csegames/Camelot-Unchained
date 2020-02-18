@@ -46,6 +46,7 @@ import { ExtraButtons } from './ExtraButtons';
 import { UrgentMessage } from './UrgentMessage';
 import { Mocks } from './Mocks';
 import { SetDisplayName } from '../fullscreen/SetDisplayName';
+import { ReconnectComponent } from '../fullscreen/Reconnect';
 
 // import { LowHealthFullScreenEffects } from './FullScreenEffects/LowHealth';
 
@@ -485,15 +486,7 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
       window.clearTimeout(this.loadTimeout);
     }, 3000);
 
-    if (!this.props.myUserContext.myUser.displayName) {
-      console.log('User doesnt have displayName set. Show modal so they are forced to input it.');
-      game.trigger(
-        'show-middle-modal',
-        <SetDisplayName onDisplayNameSet={this.props.myUserContext.refetch} />,
-        false,
-        true,
-      );
-    }
+    this.initializePostLoad();
   }
 
   private onTotalApiNetworkFailure = () => {
@@ -507,6 +500,34 @@ class HUDWithInjectedContext extends React.Component<Props, State> {
     // We probably want different tiers of error handling
     console.log('There is a partial network failure');
     this.setState({ hasPartialApiNetworkFailure: true });
+  }
+
+  private initializePostLoad = () => {
+    this.checkDisplayName();
+    this.checkReconnectServer();
+  }
+
+  private checkDisplayName = () => {
+    if (!this.props.myUserContext.myUser.displayName) {
+      console.log('User doesnt have displayName set. Show modal so they are forced to input it.');
+      game.trigger(
+        'show-middle-modal',
+        <SetDisplayName onDisplayNameSet={this.props.myUserContext.refetch} />,
+        false,
+        true,
+      );
+    }
+  }
+
+  private checkReconnectServer = () => {
+    const { matchmakingContext } = this.props;
+    if (!game.isConnectedOrConnectingToServer && matchmakingContext.host && matchmakingContext.port) {
+      // We have an active match running, but we are not connected or connecting to a server. Require users to reconnect.
+      game.trigger('show-middle-modal', <ReconnectComponent />, false, true);
+    }
+    else {
+      console.log(`Not opening reconnect modal. On server? ${game.isConnectedOrConnectingToServer}`);
+    }
   }
 }
 
