@@ -11,7 +11,6 @@ import { GraphQL, GraphQLResult } from '@csegames/library/lib/_baseGame/graphql/
 import { User } from '@csegames/library/lib/hordetest/graphql/schema';
 
 // import { getConfig } from 'lib/gqlHelpers';
-import { SetDisplayName } from '../fullscreen/SetDisplayName';
 import { preloadQueryEvents } from '../fullscreen/Preloader';
 
 const query = gql`
