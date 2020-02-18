@@ -76,7 +76,7 @@ const subscription = gql`
   }
 `;
 
-export interface MatchmakingContextState {
+interface ContextState {
   // MatchmakingEnter
   isEntered: boolean;
   timeSearching: number;
@@ -108,7 +108,9 @@ export interface ContextFunctions {
   clearMatchmakingContext: () => void;
 }
 
-export const getDefaultMatchmakingContextState = (): MatchmakingContextState => ({
+export type MatchmakingContextState = ContextState & ContextFunctions;
+
+export const getDefaultMatchmakingContextState = (): ContextState => ({
   isEntered: false,
   host: null,
   port: null,
@@ -131,23 +133,18 @@ export const MatchmakingContext = React.createContext({
   callCancelMatchmaking: () => null,
   tryConnect: () => null,
   clearMatchmakingContext: () => null,
-});
+} as MatchmakingContextState);
 
-export class MatchmakingContextProvider extends React.Component<{}, MatchmakingContextState> {
+export class MatchmakingContextProvider extends React.Component<{}, ContextState> {
   private isInitialQuery: boolean = true;
   private timeSearchingUpdateHandle: TimerRef = null
   private kickOffTimeout: number;
-  private defaultState: MatchmakingContextState;
 
   constructor(props: {}) {
     super(props);
 
-    this.defaultState = {
-      ...getDefaultMatchmakingContextState(),
-    };
-
     this.state = {
-      ...this.defaultState,
+      ...getDefaultMatchmakingContextState(),
     }
   }
 
@@ -452,6 +449,6 @@ export class MatchmakingContextProvider extends React.Component<{}, MatchmakingC
 
   private clearMatchmakingContext = () => {
     console.log('Clearing matchmaking context');
-    this.setState({ ...this.defaultState });
+    this.setState({ ...getDefaultMatchmakingContextState() });
   }
 }
