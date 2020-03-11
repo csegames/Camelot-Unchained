@@ -23,15 +23,12 @@ const AnchorWrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
 `;
 
 type ContainerProps = { radius: number; x: number; y: number; } & React.HTMLProps<HTMLDivElement>;
 const Container = styled.div`
+  display: flex;
   position: fixed;
-  width: ${(props: ContainerProps) => props.radius * 2}px;
-  height: ${(props: ContainerProps) => props.radius * 2}px;
   top: ${(props: ContainerProps) => props.y}px;
   left: ${(props: ContainerProps) => props.x}px;
   z-index: 9999;

@@ -185,6 +185,9 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       }
     }
 
+    console.log('initializeActionView');
+    console.log(actionView);
+
     if (!actionView) {
       actionView = this.getInitialCharacterActionView();
       this.updateLocalStorage(actionView);

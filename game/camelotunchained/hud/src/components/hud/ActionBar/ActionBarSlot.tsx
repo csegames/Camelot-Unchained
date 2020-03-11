@@ -19,7 +19,8 @@ const SlotContainer = styled.div`
   pointer-events: none;
   width: ${(props: SCProps) => props.radius * 2}px;
   height: ${(props: SCProps) => props.radius * 2}px;
-  transform: translateX(${(props: SCProps) => (props.radius * 2) + 10}px)
+  transform: translateX(${(props: SCProps) => (props.radius * 2) + 10}px);
+  margin-right: 10px;
 `;
 
 const IMG = styled.img`
@@ -64,6 +65,7 @@ const SlotWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: rotateZ(${({ angle }: { angle: number } & React.HTMLProps<HTMLDivElement>) => -angle.toFixed(0)}deg);
 `;
 
 const Icon = styled.span`
@@ -141,7 +143,11 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
   }
 
   // get ability info from game, for now use temp
-  const abilityState = getAbility(camelotunchained.game.abilityStates[props.clientSlotID]);
+  let abilityState = null;
+  if (slottedActionID) {
+    abilityState = getAbility(camelotunchained.game.abilityStates[props.clientSlotID]);
+  }
+
   const slottedAction: any = abilityState ? {
     name: abilityState.name,
     icon: abilityState.icon,
@@ -245,61 +251,63 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
   };
 
   return (
-    <SlotContainer {...display}>
-      {
-        inEditMode && (
-          <AddSlotBtn onMouseDown={(e: React.MouseEvent) => {
-            if (e.buttons !== 1) return;
-            actionViewContext.addSlot(props.id);
-          }}>
-            <i className='fas fa-plus'></i>
-          </AddSlotBtn>
-        )
-      }
-      {showEmptySlot && (
-        <DragAndDrop
-          type='drop'
-          acceptKeys={['action-button']}
-          onDrop={(e) => {
-            const from = {
-              groupId: (e.dataTransfer as any).group,
-              slotId: (e.dataTransfer as any).slot,
-            };
-            const target = {
-              groupId: props.activeGroup,
-              slotId: props.id,
-            };
-            actionViewContext.addAndRemoveAction(
-              (e.dataTransfer as any).action,
-              from,
-              target,
-            );
-          }}
-        >
-          <ContextMenu
-            type='items'
-            getItems={createContextMenuItems}
+    <>
+      <SlotContainer id='slot-container' {...display}>
+        {
+          inEditMode && (
+            <AddSlotBtn onMouseDown={(e: React.MouseEvent) => {
+              if (e.buttons !== 1) return;
+              actionViewContext.addSlot(props.id);
+            }}>
+              <i className='fas fa-plus'></i>
+            </AddSlotBtn>
+          )
+        }
+        {showEmptySlot && (
+          <DragAndDrop
+            type='drop'
+            acceptKeys={['action-button']}
+            onDrop={(e) => {
+              const from = {
+                groupId: (e.dataTransfer as any).group,
+                slotId: (e.dataTransfer as any).slot,
+              };
+              const target = {
+                groupId: props.activeGroup,
+                slotId: props.id,
+              };
+              actionViewContext.addAndRemoveAction(
+                (e.dataTransfer as any).action,
+                from,
+                target,
+              );
+            }}
           >
-            <SlotWrapper>
-              <IMG
-                src={`images/anchor/${definition}/${factionAbbr}-empty-slot.png`}
-                onMouseDown={(e: React.MouseEvent) => {
-                  if (e.buttons !== 2) return;
-                  console.log('right clicked slot');
+            <ContextMenu
+              type='items'
+              getItems={createContextMenuItems}
+            >
+              <SlotWrapper angle={internalState.wantAngle + props.sumAngle}>
+                <IMG
+                  src={`images/anchor/${definition}/${factionAbbr}-empty-slot.png`}
+                  onMouseDown={(e: React.MouseEvent) => {
+                    if (e.buttons !== 2) return;
+                    console.log('right clicked slot');
+                  }}
+                />
+                <Icon onMouseDown={(e: React.MouseEvent) => {
+                  if (e.buttons !== 1) return;
+                  actionViewContext.removeSlot(props.id);
                 }}
-              />
-              <Icon onMouseDown={(e: React.MouseEvent) => {
-                if (e.buttons !== 1) return;
-                actionViewContext.removeSlot(props.id);
-              }}
-              >
-                <i className='fas fa-minus'></i>
-              </Icon>
-            </SlotWrapper>
-          </ContextMenu>
-        </DragAndDrop>
-      )}
-      {slottedAction && renderAbility()}
+                >
+                  <i className='fas fa-minus'></i>
+                </Icon>
+              </SlotWrapper>
+            </ContextMenu>
+          </DragAndDrop>
+        )}
+        {slottedAction && renderAbility()}
+      </SlotContainer>
       {props.children && props.children.map(id => (
         <ActionBarSlot
           key={id}
@@ -308,6 +316,6 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
           {...actionViewContext.slots[id]}
         />
       ))}
-    </SlotContainer>
+    </>
   );
 }
