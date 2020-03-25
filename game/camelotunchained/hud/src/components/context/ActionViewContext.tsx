@@ -337,6 +337,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     anchor.groups = anchor.groups.remove(groupId);
     if (anchor.activeGroupIndex >= anchor.groups.length) {
       anchor.activeGroupIndex = anchor.groups.length - 1;
+      camelotunchained.game.setActiveAnchorGroup(anchorId, anchor.groups[anchor.activeGroupIndex]);
     }
 
     const updatedState: ContextState = {
@@ -362,6 +363,8 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       console.warn(`Invalid index provided to action. (index: ${groupIndex})`);
       return;
     }
+
+    camelotunchained.game.setActiveAnchorGroup(anchorId, anchor.groups[groupIndex]);
 
     const updatedState: ContextState = {
       ...this.state,
@@ -390,6 +393,8 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       index = 0;
     }
 
+    camelotunchained.game.setActiveAnchorGroup(anchorId, anchor.groups[index]);
+
     const updatedState: ContextState = {
       ...this.state,
       anchors: {
@@ -416,6 +421,8 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     if (index < 0) {
       index = anchor.groups.length - 1;
     }
+
+    camelotunchained.game.setActiveAnchorGroup(anchorId, anchor.groups[index]);
 
     const updatedState: ContextState = {
       ...this.state,
