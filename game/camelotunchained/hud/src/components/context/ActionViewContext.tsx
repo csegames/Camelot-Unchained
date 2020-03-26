@@ -220,6 +220,24 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       this.updateLocalStorage(actionView);
     }
 
+    Object.values(actionView.slots).forEach((slot) => {
+      const groupId = actionView.actions[slot.actionId] ?
+        actionView.actions[slot.actionId].find(a => a.slot === slot.id).group : null;
+      if (!groupId) {
+        console.error('There was an action without a group? ' + slot.actionId);
+        return;
+      }
+
+      console.log('CONFIGURE SLOTTED: ' + slot.actionId);
+      camelotunchained.game.configureSlottedAction(
+        slot.anchorId,
+        slot.id,
+        actionView.actions[slot.actionId].find(a => a.slot === slot.id).group,
+        slot.actionId,
+        this.getBoundKeyValueForAbility(Number(slot.actionId)),
+      );
+    });
+
     this.isInitial = false;
     this.setState({ ...actionView, editMode: EditMode.Disabled });
   }
@@ -288,6 +306,12 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     } as ContextState;
   }
 
+  private getBoundKeyValueForAbility = (actionId: number) => {
+    const keybindsClone = cloneDeep(game.keybinds);
+    const keybind = Object.values(keybindsClone).find(keybind => keybind.description === "Ability " + (actionId + 1));
+    return keybind.binds[0].value;
+  }
+
   private enableActionEditMode = () => {
     this.setState({ editMode: EditMode.ActionEdit });
     camelotunchained.game._cse_dev_enterActionBarEditMode();
@@ -337,7 +361,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     anchor.groups = anchor.groups.remove(groupId);
     if (anchor.activeGroupIndex >= anchor.groups.length) {
       anchor.activeGroupIndex = anchor.groups.length - 1;
-      camelotunchained.game.setActiveAnchorGroup(anchorId, anchor.groups[anchor.activeGroupIndex]);
+      this.clientSetActiveAnchorGroup(anchorId, anchor.groups[anchor.activeGroupIndex]);
     }
 
     const updatedState: ContextState = {
@@ -364,7 +388,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       return;
     }
 
-    camelotunchained.game.setActiveAnchorGroup(anchorId, anchor.groups[groupIndex]);
+    this.clientSetActiveAnchorGroup(anchorId, anchor.groups[groupIndex]);
 
     const updatedState: ContextState = {
       ...this.state,
@@ -393,7 +417,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       index = 0;
     }
 
-    camelotunchained.game.setActiveAnchorGroup(anchorId, anchor.groups[index]);
+    this.clientSetActiveAnchorGroup(anchorId, anchor.groups[index]);
 
     const updatedState: ContextState = {
       ...this.state,
@@ -422,7 +446,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       index = anchor.groups.length - 1;
     }
 
-    camelotunchained.game.setActiveAnchorGroup(anchorId, anchor.groups[index]);
+    this.clientSetActiveAnchorGroup(anchorId, anchor.groups[index]);
 
     const updatedState: ContextState = {
       ...this.state,
@@ -882,5 +906,12 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     };
 
     this.setState(updatedState);
+  }
+
+  private clientSetActiveAnchorGroup = (anchorId: string, groupId: string) => {
+    console.log('CLIENT SET ACTIVE ANCHOR GROUP');
+    console.log(anchorId);
+    console.log(groupId);
+    camelotunchained.game.setActiveAnchorGroup(anchorId, groupId);
   }
 }
