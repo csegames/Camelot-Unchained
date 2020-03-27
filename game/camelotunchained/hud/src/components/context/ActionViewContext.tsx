@@ -221,26 +221,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       this.updateLocalStorage(actionView);
     }
 
-    Object.values(actionView.slots).forEach((slot) => {
-      const groupId = actionView.actions[slot.actionId] ?
-        actionView.actions[slot.actionId].find(a => a.slot === slot.id).group : null;
-      if (!groupId) {
-        console.error('There was an action without a group? ' + slot.actionId);
-        return;
-      }
-
-      console.log('CONFIGURE SLOTTED: ' + slot.actionId);
-      // game.configureSlottedAction(
-      //   slot.anchorId,
-      //   slot.id,
-      //   actionView.actions[slot.actionId].find(a => a.slot === slot.id).group,
-      //   slot.actionId,
-      //   this.getBoundKeyValueForAbility(Number(slot.actionId)),
-      // );
-    });
-
-    // game._cse_dev_exitActionBarEditMode();
-
     this.isInitial = false;
     this.setState({ ...actionView, editMode: EditMode.Disabled });
   }
@@ -303,12 +283,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       queuedAbilityId: null,
     } as ContextState;
   }
-
-  // private getBoundKeyValueForAbility = (actionId: number) => {
-  //   const keybindsClone = cloneDeep(game.keybinds);
-  //   const keybind = Object.values(keybindsClone).find(keybind => keybind.description === "Ability " + (actionId + 1));
-  //   return keybind.binds[0].value;
-  // }
 
   private enableActionEditMode = () => {
     this.setState({ editMode: EditMode.ActionEdit });
