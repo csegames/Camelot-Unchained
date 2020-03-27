@@ -214,6 +214,15 @@ export interface BaseGameModel {
     removeLast: () => void;
     clearAll: () => void;
   };
+
+  /**
+   * CU Action Bar API
+   */
+  _cse_dev_enterActionBarEditMode: () => void;
+  _cse_dev_exitActionBarEditMode: () => void;
+  configureSlottedAction: (anchorId: number, slotId: number, groupId: number, actionId: number, boundKeyValue: number) => void;
+  setActiveAnchorGroup: (anchorId: number, groupId: number) => void;
+  activateSlottedAction: (anchorId: number, slotId: number, groupId: number, actionId: number) => void;
 }
 
 // Item Placement API

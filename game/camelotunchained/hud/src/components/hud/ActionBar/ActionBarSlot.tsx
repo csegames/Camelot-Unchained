@@ -121,7 +121,7 @@ function getAbility(clientAbility: AbilityState) {
 
 export interface ActionBarSlotProps extends ActionSlot {
   sumAngle: number; // used to orient the action in a slot correctly
-  activeGroup: string; // used to identify which abilities are active in this slot
+  activeGroup: number; // used to identify which abilities are active in this slot
 }
 
 // tslint:disable-next-line:function-name
@@ -140,16 +140,16 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
   const definition = ui.isUHD() ? 'uhd' : 'hd';
   const factionAbbr = FactionExt.abbreviation(camelotunchained.game.selfPlayerState.faction);
 
-  let slottedActionID: string = '';
+  let slottedActionID: number = -1;
   for (const actionId in actionViewContext.actions) {
     if (actionViewContext.actions[actionId].findIndex(p => p.slot === props.id && p.group === props.activeGroup) >= 0) {
-      slottedActionID = actionId;
+      slottedActionID = Number(actionId);
       break;
     }
   }
 
   // get ability info from game, for now use temp
-  const abilityState = slottedActionID ? getAbility(camelotunchained.game.abilityStates[slottedActionID]) : null;
+  const abilityState = slottedActionID !== -1 ? getAbility(camelotunchained.game.abilityStates[slottedActionID]) : null;
   const slottedAction = abilityState ? {
     name: abilityState.name,
     icon: abilityState.icon,
@@ -288,8 +288,6 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
       groupId: props.activeGroup,
       slotId: props.id,
     };
-
-    console.log(e.dataTransfer);
 
     actionViewContext.addAndRemoveAction(
       e.dataTransfer.actionId,

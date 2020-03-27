@@ -56,7 +56,7 @@ export default function(isAttached: boolean) {
   // INIT Services
   camelotunchained._devGame.signalR = initSignalR();
 
-  camelotunchained._devGame.store = initGameDataStore();
+  camelotunchained._devGame.store = initGameDataStore();  
 
   initAnnouncementRouting();
 
@@ -71,11 +71,6 @@ export function initOutOfContextGame(): Partial<GameInterface> {
   const model: GameModel = {
     _cse_dev_beginTriggerKeyActionLoop: noOp,
     _cse_dev_endTriggerKeyActionLoop: noOp,
-    _cse_dev_enterActionBarEditMode: noOp,
-    _cse_dev_exitActionBarEditMode: noOp,
-    configureSlottedAction: noOp,
-    setActiveAnchorGroup: noOp,
-    activateSlottedAction: noOp,
   };
 
   return withOverrides({

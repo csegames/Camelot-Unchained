@@ -184,6 +184,12 @@ export function initOutOfContextGame(): Partial<BaseGameInterface> {
     isConnectedOrConnectingToServer: false,
     isConnectedToServer: false,
     isDisconnectingFromAllServers: false,
+    
+    _cse_dev_enterActionBarEditMode: noOp,
+    _cse_dev_exitActionBarEditMode: noOp,
+    configureSlottedAction: noOp,
+    setActiveAnchorGroup: noOp,
+    activateSlottedAction: noOp,
   };
 
   return withOverrides({
