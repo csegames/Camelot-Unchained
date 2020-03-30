@@ -14,6 +14,10 @@ const ABILITY_BAR_VERSION = '0';
 const ABILITY_BAR_VERSION_KEY = 'cu/game/abilities/barVersion';
 const ABILITY_BAR_KEY = 'cu/game/abilities/bar';
 
+function idIsInvalid(id: number) {
+  return typeof id !== 'number' || id === -1;
+}
+
 export enum EditMode {
   Disabled,
   ActionEdit,
@@ -191,6 +195,12 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     localStorage.setItem(ABILITY_BAR_KEY + game.characterID, JSON.stringify(persistedState));
   }
 
+  private getBoundKeyValueForAbility = (actionId: number) => {
+    const keybindsClone = cloneDeep(game.keybinds);
+    const keybind = Object.values(keybindsClone).find(keybind => keybind.description === "Ability " + (actionId + 1));
+    return keybind.binds[0].value;
+  }
+
   private initializeActionView = () => {
     if (Object.keys(camelotunchained.game.abilityBarState.abilities).length === 0) {
       return;
@@ -284,19 +294,19 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     } as ContextState;
   }
 
-  private enableActionEditMode = () => {
+  private enableActionEditMode = async () => {
     this.setState({ editMode: EditMode.ActionEdit });
-    game._cse_dev_enterActionBarEditMode();
+    await game.enterActionBarEditMode();
   }
 
-  private enableSlotEditMode = () => {
+  private enableSlotEditMode = async () => {
     this.setState({ editMode: EditMode.SlotEdit });
-    game._cse_dev_enterActionBarEditMode();
+    await game.enterActionBarEditMode();
   }
 
-  private disableEditMode = () => {
+  private disableEditMode = async () => {
     this.setState({ editMode: EditMode.Disabled });
-    game._cse_dev_exitActionBarEditMode();
+    await game.exitActionBarEditMode();
   }
 
   private addGroup = (anchorId: number) => {
@@ -609,6 +619,15 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       queuedAbilityId: null,
     };
 
+    console.log('ADD ACTION');
+    game.configureSlottedAction(
+      updatedState.slots[slotId].anchorId,
+      slotId,
+      groupId,
+      actionId,
+      this.getBoundKeyValueForAbility(actionId)
+    );
+
     this.updateLocalStorage(updatedState);
     this.setState(updatedState);
   }
@@ -678,7 +697,8 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       return;
     }
 
-    if (!from.groupId) {
+    console.log('YOYOOWOQEROQWER');
+    if (idIsInvalid(from.groupId)) {
       // replacing
       const targetPositions = (this.state.actions[target.actionId] || []).slice()
       .filter(a => !(a.group === target.groupId && a.slot === target.slotId));
@@ -706,6 +726,15 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         },
         queuedAbilityId: null,
       };
+
+      console.log('YOYOYO configureSlottedAction');
+      game.configureSlottedAction(
+        updatedState.slots[target.slotId].anchorId,
+        target.slotId,
+        target.groupId,
+        from.actionId,
+        this.getBoundKeyValueForAbility(from.actionId),
+      );
 
       this.updateLocalStorage(updatedState);
       this.setState(updatedState);
@@ -826,7 +855,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
     let actionSlotIndex = -1;
     childrenToRemove.forEach((childSlot) => {
-      if (childSlot.actionId) {
+      if (!idIsInvalid(childSlot.actionId)) {
         // Remove slot from actions map
         const action = actionsClone[childSlot.actionId];
         const slotIndex = action.findIndex(a => a.slot === childSlot.id);

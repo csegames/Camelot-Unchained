@@ -216,13 +216,16 @@ export interface BaseGameModel {
   };
 
   /**
-   * CU Action Bar API
+   * Action Bar API
    */
-  _cse_dev_enterActionBarEditMode: () => void;
-  _cse_dev_exitActionBarEditMode: () => void;
+  enterActionBarEditMode: () => CancellablePromise<Success | Failure>;
+  exitActionBarEditMode: () => CancellablePromise<Success | Failure>;
   configureSlottedAction: (anchorId: number, slotId: number, groupId: number, actionId: number, boundKeyValue: number) => void;
   setActiveAnchorGroup: (anchorId: number, groupId: number) => void;
   activateSlottedAction: (anchorId: number, slotId: number, groupId: number, actionId: number) => void;
+
+  _cse_dev_enterActionBarEditMode: () => TaskHandle;
+  _cse_dev_exitActionBarEditMode: () => TaskHandle;
 }
 
 // Item Placement API

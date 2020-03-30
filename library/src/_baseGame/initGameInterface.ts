@@ -55,6 +55,9 @@ export default function (isAttached: boolean) {
     _devGame.building.replaceShapesAsync
       = makeClientPromise((game, sID, rID, inS) => game.building._cse_dev_replaceShapes(sID, rID, inS));
 
+    _devGame.enterActionBarEditMode = makeClientPromise((game) => game._cse_dev_enterActionBarEditMode());
+    _devGame.exitActionBarEditMode = makeClientPromise((game) => game._cse_dev_exitActionBarEditMode());
+
     // EVENTS
     _devGame.onSystemMessage = onSystemMessage;
     _devGame.sendSystemMessage = sendSystemMessage;
@@ -187,6 +190,8 @@ export function initOutOfContextGame(): Partial<BaseGameInterface> {
     
     _cse_dev_enterActionBarEditMode: noOp,
     _cse_dev_exitActionBarEditMode: noOp,
+    enterActionBarEditMode: noOp,
+    exitActionBarEditMode: noOp,
     configureSlottedAction: noOp,
     setActiveAnchorGroup: noOp,
     activateSlottedAction: noOp,
