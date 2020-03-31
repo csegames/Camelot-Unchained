@@ -220,6 +220,7 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
                 {...slottedAction as any}
                 disableInteractions
                 additionalStyles={{ filter: 'brightness(75%)' }}
+                slotId={props.id}
               />
             )}
             dragRenderOffset={{ x: -display.radius, y: -display.radius }}
@@ -249,6 +250,7 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
                 <ActionBtn
                   {...slottedAction as any}
                   disableInteractions={true}
+                  slotId={props.id}
                   additionalStyles={{
                     [internalState.isDragging && 'filter']: 'brightness(75%)',
                   }}
@@ -256,7 +258,7 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
               </BtnWrapper>
             </ContextMenu>
           </DragAndDrop>
-        ) : <ActionBtn {...slottedAction as any} />}
+        ) : <ActionBtn {...slottedAction as any} slotId={props.id} />}
       </ActionWrapper>
     );
   };

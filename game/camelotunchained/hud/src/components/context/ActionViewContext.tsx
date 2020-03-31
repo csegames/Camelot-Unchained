@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { isEqual } from 'lodash';
+import { generateUUIDv4 } from 'lib/uuid';
 
 export const MAX_GROUP_COUNT = 6;
 export const MAX_CHILD_SLOT_COUNT = 4;
@@ -137,6 +138,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
     this.state = getDefaultActionViewContextState();
   }
+
   public render() {
     return (
       <ActionViewContext.Provider value={{
@@ -232,6 +234,8 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     }
 
     this.isInitial = false;
+    console.log('INITIALIZE');
+    console.log(actionView);
     this.setState({ ...actionView, editMode: EditMode.Disabled });
   }
 
@@ -295,18 +299,38 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   }
 
   private enableActionEditMode = async () => {
-    this.setState({ editMode: EditMode.ActionEdit });
-    await game.enterActionBarEditMode();
+    try {
+      const res = await game.actions.enterActionBarEditModeAsync();
+      console.log('enableActionEditMode');
+      console.log(res);
+      if (res.success) {
+        this.setState({ editMode: EditMode.ActionEdit });
+      }
+    } catch(e) {
+      console.error('There was an error entering enableActionEditMode');
+    }
   }
 
   private enableSlotEditMode = async () => {
-    this.setState({ editMode: EditMode.SlotEdit });
-    await game.enterActionBarEditMode();
+    try {
+      const res = await game.actions.enterActionBarEditModeAsync();
+      if (res.success) {
+        this.setState({ editMode: EditMode.SlotEdit });
+      }
+    } catch(e) {
+      console.error('There was an error entering enableActionEditMode');
+    }
   }
 
   private disableEditMode = async () => {
-    this.setState({ editMode: EditMode.Disabled });
-    await game.exitActionBarEditMode();
+    try {
+      const res = await game.actions.exitActionBarEditModeAsync();
+      if (res.success) {
+        this.setState({ editMode: EditMode.Disabled });
+      }
+    } catch(e) {
+      console.error('There was an error exiting diableEditMode');
+    }
   }
 
   private addGroup = (anchorId: number) => {
@@ -446,11 +470,13 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   }
 
   private addSlot = (parentId: number) => {
+    const anchorId = this.state.slots[parentId] ? this.state.slots[parentId].anchorId : parentId;
+
     const newSlot: ActionSlot = {
-      id: this.generateSlotId(this.state.slots),
+      id: this.generateSlotId(),
       angle: 0,
       actionId: -1,
-      anchorId: this.state.slots[parentId] ? this.state.slots[parentId].anchorId : parentId,
+      anchorId,
       parent: parentId,
       children: [],
     };
@@ -620,7 +646,14 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     };
 
     console.log('ADD ACTION');
-    game.configureSlottedAction(
+    console.log({
+      anchorId: updatedState.slots[slotId].anchorId,
+      slotId,
+      groupId,
+      actionId,
+      keybind: this.getBoundKeyValueForAbility(actionId),
+    });
+    this.clientAssignSlottedAction(
       updatedState.slots[slotId].anchorId,
       slotId,
       groupId,
@@ -672,6 +705,10 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         [actionId]: positions,
       },
     };
+
+    console.log('Removing action');
+    game.actions.clearSlottedAction(slotId);
+
     this.updateLocalStorage(updatedState);
     this.setState(updatedState);
   }
@@ -728,7 +765,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       };
 
       console.log('YOYOYO configureSlottedAction');
-      game.configureSlottedAction(
+      this.clientAssignSlottedAction(
         updatedState.slots[target.slotId].anchorId,
         target.slotId,
         target.groupId,
@@ -765,15 +802,33 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
           ...this.state.slots,
           [from.slotId]: {
             ...this.state.slots[from.slotId],
+            anchorId: this.state.slots[target.slotId].anchorId,
             actionId: target.actionId,
           },
           [target.slotId]: {
             ...this.state.slots[target.slotId],
+            anchorId: this.state.slots[from.slotId].anchorId,
             actionId: from.actionId,
           }
         },
         queuedAbilityId: null,
       };
+
+      this.clientAssignSlottedAction(
+        this.state.slots[from.slotId].anchorId,
+        from.slotId,
+        from.groupId,
+        target.actionId,
+        this.getBoundKeyValueForAbility(target.actionId),
+      );
+
+      this.clientAssignSlottedAction(
+        this.state.slots[target.slotId].anchorId,
+        target.slotId,
+        target.groupId,
+        from.actionId,
+        this.getBoundKeyValueForAbility(from.actionId),
+      );
 
       this.updateLocalStorage(updatedState);
       this.setState(updatedState);
@@ -810,7 +865,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const groupId = this.generateGroupId(anchorId, this.state.anchors);
 
     const newSlot: ActionSlot = {
-      id: this.generateSlotId(this.state.slots),
+      id: this.generateSlotId(),
       angle: 0,
       actionId: -1,
       anchorId,
@@ -844,7 +899,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   private removeAnchor = (anchorId: number) => {
     if (Object.keys(this.state.anchors).length <= 1) {
       return;
-    } 
+    }
     const anchorsClone = cloneDeep(this.state.anchors);
     const slotsClone = cloneDeep(this.state.slots);
     const actionsClone = cloneDeep(this.state.actions);
@@ -888,11 +943,30 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       },
     };
 
+    game.actions.removeAnchor(anchorId);
+    this.updateLocalStorage(updatedState);
     this.setState(updatedState);
   }
 
+  private clientAssignSlottedAction = (anchorId: number,
+                                          slotId: number,
+                                          groupId: number,
+                                          actionId: number,
+                                          boundKeyValue: number) => {
+    game.actions.assignSlottedAction(
+      anchorId,
+      slotId,
+      groupId,
+      actionId,
+      this.getBoundKeyValueForAbility(actionId),
+    );
+  }
+
   private clientSetActiveAnchorGroup = (anchorId: number, groupId: number) => {
-    game.setActiveAnchorGroup(anchorId, groupId);
+    console.log('client set active anchor group');
+    console.log(anchorId);
+    console.log(groupId);
+    game.actions.setActiveAnchorGroup(anchorId, groupId);
   }
 
   private generateAnchorId = (anchors: { [anchorId: number]: ActionViewAnchor }): number => {
@@ -921,14 +995,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     return sortedGroups[sortedGroups.length - 1] + 1;
   }
 
-  private generateSlotId = (slots: { [slotId: number]: ActionSlot }, isNext?: boolean): number => {
-    const sortedSlots = Object.values(slots).sort((a, b) => b.id - a.id);
-    const lastSlot = sortedSlots[sortedSlots.length - 1];
-
-    if (!lastSlot) {
-      return 0;
-    }
-
-    return isNext ? lastSlot.id + 2 : lastSlot.id + 1;
+  private generateSlotId = (): number => {
+    return generateUUIDv4();
   }
 }

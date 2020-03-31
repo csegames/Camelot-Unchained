@@ -128,6 +128,7 @@ export function AbilityIcon(props: { icon: string }) {
 
 export interface ActionBtnProps extends Ability {
   keybind: string;
+  slotId: number;
   additionalStyles?: React.CSSProperties;
   disableInteractions?: boolean;
 }
@@ -163,10 +164,7 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
       <Container
         {...display}
         acceptInput={!this.props.disableInteractions}
-        onMouseDown={() => {
-          if (this.props.disableInteractions) return;
-          game.triggerKeyAction(abilityState.keyActionID);
-        }}
+        onMouseDown={this.onClick}
         style={this.props.additionalStyles}
         className={this.getErrorClassName()}
       >
@@ -225,6 +223,13 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
     }
 
     this.setState({ abilityState });
+  }
+
+  private onClick = () => {
+    if (this.props.disableInteractions) return;
+    console.log('onClick');
+    console.log(this.props.slotId);
+    game.actions.activateSlottedAction(this.props.slotId);
   }
 }
 

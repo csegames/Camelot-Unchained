@@ -20,7 +20,7 @@ import initKeyActions from './GameClientModels/KeyActions';
 import initAbilityState from './GameClientModels/AbilityState';
 import initAbilityBarState from './GameClientModels/AbilityBarState';
 import initOfflineZoneSelectState from './GameClientModels/OfflineZoneSelectState';
-import { makeClientPromise } from './clientTasks';
+import { makeClientPromise } from '../../_baseGame/clientTasks';
 
 import initGameDataStore from './store';
 import { QueryOptions } from '../../_baseGame/graphql/query';

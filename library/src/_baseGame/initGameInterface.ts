@@ -55,8 +55,8 @@ export default function (isAttached: boolean) {
     _devGame.building.replaceShapesAsync
       = makeClientPromise((game, sID, rID, inS) => game.building._cse_dev_replaceShapes(sID, rID, inS));
 
-    _devGame.enterActionBarEditMode = makeClientPromise((game) => game._cse_dev_enterActionBarEditMode());
-    _devGame.exitActionBarEditMode = makeClientPromise((game) => game._cse_dev_exitActionBarEditMode());
+    _devGame.actions.enterActionBarEditModeAsync = makeClientPromise((game) => game.actions._cse_dev_enterActionBarEditMode());
+    _devGame.actions.exitActionBarEditModeAsync = makeClientPromise((game) => game.actions._cse_dev_exitActionBarEditMode());
 
     // EVENTS
     _devGame.onSystemMessage = onSystemMessage;
@@ -188,13 +188,17 @@ export function initOutOfContextGame(): Partial<BaseGameInterface> {
     isConnectedToServer: false,
     isDisconnectingFromAllServers: false,
     
-    _cse_dev_enterActionBarEditMode: noOp,
-    _cse_dev_exitActionBarEditMode: noOp,
-    enterActionBarEditMode: noOp,
-    exitActionBarEditMode: noOp,
-    configureSlottedAction: noOp,
-    setActiveAnchorGroup: noOp,
-    activateSlottedAction: noOp,
+    actions: {
+      _cse_dev_enterActionBarEditMode: noOp,
+      _cse_dev_exitActionBarEditMode: noOp,
+      enterActionBarEditModeAsync: noOp,
+      exitActionBarEditModeAsync: noOp,
+      assignSlottedAction: noOp,
+      setActiveAnchorGroup: noOp,
+      activateSlottedAction: noOp,
+      clearSlottedAction: noOp,
+      removeAnchor: noOp,
+    }
   };
 
   return withOverrides({

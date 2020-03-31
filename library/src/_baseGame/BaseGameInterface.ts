@@ -218,11 +218,18 @@ export interface BaseGameModel {
   /**
    * Action Bar API
    */
-  enterActionBarEditMode: () => CancellablePromise<Success | Failure>;
-  exitActionBarEditMode: () => CancellablePromise<Success | Failure>;
-  configureSlottedAction: (anchorId: number, slotId: number, groupId: number, actionId: number, boundKeyValue: number) => void;
+  actions: ActionBarAPI;
+}
+
+// Action Bar API
+interface ActionBarAPI {
+  enterActionBarEditModeAsync: () => CancellablePromise<Success | Failure>;
+  exitActionBarEditModeAsync: () => CancellablePromise<Success | Failure>;
+  assignSlottedAction: (slotId: number, anchorId: number, groupId: number, actionId: number, boundKeyValue: number) => void;
   setActiveAnchorGroup: (anchorId: number, groupId: number) => void;
-  activateSlottedAction: (anchorId: number, slotId: number, groupId: number, actionId: number) => void;
+  activateSlottedAction: (slotId: number) => void;
+  clearSlottedAction: (slotId: number) => void;
+  removeAnchor: (anchorId: number) => void;
 
   _cse_dev_enterActionBarEditMode: () => TaskHandle;
   _cse_dev_exitActionBarEditMode: () => TaskHandle;
