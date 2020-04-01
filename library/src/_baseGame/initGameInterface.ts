@@ -194,6 +194,7 @@ export function initOutOfContextGame(): Partial<BaseGameInterface> {
       enterActionBarEditModeAsync: noOp,
       exitActionBarEditModeAsync: noOp,
       assignSlottedAction: noOp,
+      assignKeybind: noOp,
       setActiveAnchorGroup: noOp,
       activateSlottedAction: noOp,
       clearSlottedAction: noOp,

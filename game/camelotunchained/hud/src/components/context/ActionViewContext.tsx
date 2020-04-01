@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { isEqual } from 'lodash';
-import { generateUUIDv4 } from 'lib/uuid';
+import { KeyCodes } from '@csegames/library/lib/camelotunchained';
 
 export const MAX_GROUP_COUNT = 6;
 export const MAX_CHILD_SLOT_COUNT = 4;
@@ -228,14 +228,14 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       }
     }
 
+    console.log('INITIALIZE ACTION VIEW');
     if (!actionView) {
       actionView = this.getInitialCharacterActionView();
+      this.initializeClientSlotAssignments(actionView.slots);
       this.updateLocalStorage(actionView);
     }
 
     this.isInitial = false;
-    console.log('INITIALIZE');
-    console.log(actionView);
     this.setState({ ...actionView, editMode: EditMode.Disabled });
   }
 
@@ -296,6 +296,34 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       editMode: EditMode.Disabled,
       queuedAbilityId: null,
     } as ContextState;
+  }
+
+  private initializeClientSlotAssignments = async (slots: { [slotId: number]: ActionSlot }) => {
+    console.log('initializeClientSlotAssignments');
+    console.log(slots);
+    try {
+      const res = await game.actions.enterActionBarEditModeAsync();
+      if (res.success) {
+        const firstKeybind = KeyCodes.KEY_Zero;
+        const lastKeybind = KeyCodes.KEY_Nine;
+        Object.values(slots).forEach((slot, i) => {
+          this.clientAssignSlottedAction(slot.anchorId, slot.id, slot.actionId);
+
+          if (firstKeybind + i <= lastKeybind) {
+            console.log('assign keybind yo');
+            console.log(firstKeybind + i);
+            game.actions.assignKeybind(slot.id, firstKeybind + i);
+          }
+        });
+        
+      } else {
+        console.error('Could not enter edit mode');
+      }
+
+      await game.actions.exitActionBarEditModeAsync();
+    } catch(e) {
+      console.error('Failed to initialize slots through client api.');
+    }
   }
 
   private enableActionEditMode = async () => {
@@ -473,7 +501,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const anchorId = this.state.slots[parentId] ? this.state.slots[parentId].anchorId : parentId;
 
     const newSlot: ActionSlot = {
-      id: this.generateSlotId(),
+      id: this.generateSlotId(this.state.slots),
       angle: 0,
       actionId: -1,
       anchorId,
@@ -653,13 +681,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       actionId,
       keybind: this.getBoundKeyValueForAbility(actionId),
     });
-    this.clientAssignSlottedAction(
-      updatedState.slots[slotId].anchorId,
-      slotId,
-      groupId,
-      actionId,
-      this.getBoundKeyValueForAbility(actionId)
-    );
+    this.clientAssignSlottedAction(updatedState.slots[slotId].anchorId, slotId, actionId);
 
     this.updateLocalStorage(updatedState);
     this.setState(updatedState);
@@ -765,13 +787,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       };
 
       console.log('YOYOYO configureSlottedAction');
-      this.clientAssignSlottedAction(
-        updatedState.slots[target.slotId].anchorId,
-        target.slotId,
-        target.groupId,
-        from.actionId,
-        this.getBoundKeyValueForAbility(from.actionId),
-      );
+      this.clientAssignSlottedAction(updatedState.slots[target.slotId].anchorId, target.slotId, from.actionId);
 
       this.updateLocalStorage(updatedState);
       this.setState(updatedState);
@@ -814,21 +830,8 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         queuedAbilityId: null,
       };
 
-      this.clientAssignSlottedAction(
-        this.state.slots[from.slotId].anchorId,
-        from.slotId,
-        from.groupId,
-        target.actionId,
-        this.getBoundKeyValueForAbility(target.actionId),
-      );
-
-      this.clientAssignSlottedAction(
-        this.state.slots[target.slotId].anchorId,
-        target.slotId,
-        target.groupId,
-        from.actionId,
-        this.getBoundKeyValueForAbility(from.actionId),
-      );
+      this.clientAssignSlottedAction(this.state.slots[from.slotId].anchorId, from.slotId, target.actionId);
+      this.clientAssignSlottedAction(this.state.slots[target.slotId].anchorId, target.slotId, from.actionId);
 
       this.updateLocalStorage(updatedState);
       this.setState(updatedState);
@@ -865,7 +868,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const groupId = this.generateGroupId(anchorId, this.state.anchors);
 
     const newSlot: ActionSlot = {
-      id: this.generateSlotId(),
+      id: this.generateSlotId(this.state.slots),
       angle: 0,
       actionId: -1,
       anchorId,
@@ -948,18 +951,10 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     this.setState(updatedState);
   }
 
-  private clientAssignSlottedAction = (anchorId: number,
-                                          slotId: number,
-                                          groupId: number,
-                                          actionId: number,
-                                          boundKeyValue: number) => {
-    game.actions.assignSlottedAction(
-      anchorId,
-      slotId,
-      groupId,
-      actionId,
-      this.getBoundKeyValueForAbility(actionId),
-    );
+  private clientAssignSlottedAction = (slotId: number,
+                                          anchorId: number,
+                                          actionId: number) => {
+    game.actions.assignSlottedAction(slotId, anchorId, actionId);
   }
 
   private clientSetActiveAnchorGroup = (anchorId: number, groupId: number) => {
@@ -995,7 +990,11 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     return sortedGroups[sortedGroups.length - 1] + 1;
   }
 
-  private generateSlotId = (): number => {
-    return generateUUIDv4();
+  private generateSlotId = (slots: { [slotId: number]: ActionSlot }): number => {
+    const sortedSlots = Object.values(slots).sort((a, b) => {
+      return b.id - a.id;
+    });
+
+    return sortedSlots[sortedSlots.length - 1].id + 1;
   }
 }
