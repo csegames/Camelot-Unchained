@@ -170,7 +170,7 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
       >
         <AbilityIcon icon={this.props.icon} />
         <OverlayShadow />
-        <KeybindInfo>{abilityState.boundKeyName}</KeybindInfo>
+        <KeybindInfo>{this.getBoundKeyValueForAbility(this.props.slotId)}</KeybindInfo>
         <InnerRing {...this.props} abilityState={abilityState} />
         <OuterRing {...this.props} abilityState={abilityState} />
         {queued && <QueuedStateTick />}
@@ -230,6 +230,12 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
     console.log('onClick');
     console.log(this.props.slotId);
     game.actions.activateSlottedAction(this.props.slotId);
+  }
+
+  private getBoundKeyValueForAbility = (slotId: number) => {
+    const keybindsClone = cloneDeep(game.keybinds);
+    const keybind = Object.values(keybindsClone).find(keybind => keybind.description === "Ability " + (slotId + 1));
+    return keybind.binds[0].name;
   }
 }
 

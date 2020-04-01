@@ -6,7 +6,6 @@
 
 import React from 'react';
 import { isEqual } from 'lodash';
-import { KeyCodes } from '@csegames/library/lib/camelotunchained';
 
 export const MAX_GROUP_COUNT = 6;
 export const MAX_CHILD_SLOT_COUNT = 4;
@@ -43,7 +42,7 @@ interface ContextFunctions {
   activateGroup: (anchorId: number, groupIndex: number) => void;
   activateNextGroup: (anchorId: number) => void;
   activatePrevGroup: (anchorId: number) => void;
-  addSlot: (parentId: number) => void;
+  addSlot: (addingToAnchor: boolean, parentId: number) => void;
   removeSlot: (slotId: number) => void;
   setSlotAngle: (slotId: number, angle: number) => void;
   addAction: (actionId: number, groupId: number, slotId: number) => void;
@@ -85,12 +84,17 @@ export interface ActionViewAnchor {
   children: number[]; // direct child slots
 }
 
+export enum ParentType {
+  Anchor,
+  Slot
+}
+
 export interface ActionSlot {
   id: number;
   angle: number;
   anchorId: number;
   actionId: number;
-  parent: number;
+  parent: { type: ParentType, id: number };
   children: number[];
 }
 
@@ -197,12 +201,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     localStorage.setItem(ABILITY_BAR_KEY + game.characterID, JSON.stringify(persistedState));
   }
 
-  private getBoundKeyValueForAbility = (actionId: number) => {
-    const keybindsClone = cloneDeep(game.keybinds);
-    const keybind = Object.values(keybindsClone).find(keybind => keybind.description === "Ability " + (actionId + 1));
-    return keybind.binds[0].value;
-  }
-
   private initializeActionView = () => {
     if (Object.keys(camelotunchained.game.abilityBarState.abilities).length === 0) {
       return;
@@ -228,12 +226,14 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       }
     }
 
-    console.log('INITIALIZE ACTION VIEW');
     if (!actionView) {
       actionView = this.getInitialCharacterActionView();
-      this.initializeClientSlotAssignments(actionView.slots);
       this.updateLocalStorage(actionView);
     }
+
+    console.log('!@$@!#$!@#$!@#$');
+    console.log(actionView);
+    this.initializeClientSlotAssignments(actionView.slots);
 
     this.isInitial = false;
     this.setState({ ...actionView, editMode: EditMode.Disabled });
@@ -251,7 +251,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     let nextSlotId: number = null;
     const abilityBarArray = Object.values(camelotunchained.game.abilityBarState.abilities);
     abilityBarArray.forEach((ability, i) => {
-      const currentSlotId = nextSlotId ? nextSlotId : 0;
+      const currentSlotId = nextSlotId ? nextSlotId : this.generateSlotId(slots);
 
       if (i === abilityBarArray.length - 1) {
         nextSlotId = null;
@@ -265,7 +265,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         angle: 0,
         anchorId,
         actionId,
-        parent: prevSlotId === null ? anchorId : prevSlotId,
+        parent: prevSlotId === null ? { type: ParentType.Anchor, id: anchorId } : { type: ParentType.Slot, id: prevSlotId },
         children: nextSlotId ? [nextSlotId] : [],
       };
 
@@ -299,21 +299,11 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   }
 
   private initializeClientSlotAssignments = async (slots: { [slotId: number]: ActionSlot }) => {
-    console.log('initializeClientSlotAssignments');
-    console.log(slots);
     try {
       const res = await game.actions.enterActionBarEditModeAsync();
       if (res.success) {
-        const firstKeybind = KeyCodes.KEY_Zero;
-        const lastKeybind = KeyCodes.KEY_Nine;
         Object.values(slots).forEach((slot, i) => {
           this.clientAssignSlottedAction(slot.anchorId, slot.id, slot.actionId);
-
-          if (firstKeybind + i <= lastKeybind) {
-            console.log('assign keybind yo');
-            console.log(firstKeybind + i);
-            game.actions.assignKeybind(slot.id, firstKeybind + i);
-          }
         });
         
       } else {
@@ -497,7 +487,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     this.setState(updatedState);
   }
 
-  private addSlot = (parentId: number) => {
+  private addSlot = (addingToAnchor: boolean, parentId: number) => {
     const anchorId = this.state.slots[parentId] ? this.state.slots[parentId].anchorId : parentId;
 
     const newSlot: ActionSlot = {
@@ -505,7 +495,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       angle: 0,
       actionId: -1,
       anchorId,
-      parent: parentId,
+      parent: { type: addingToAnchor ? ParentType.Anchor : ParentType.Slot, id: parentId },
       children: [],
     };
 
@@ -571,7 +561,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       return;
     }
 
-    if (this.state.anchors[slot.parent]) {
+    if (slot.parent.type === ParentType.Anchor && this.state.anchors[slot.parent.id]) {
 
       // if this is the last slot, don't remove it
       if (slot.children.length === 0) {
@@ -579,7 +569,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       }
 
       // parent is an anchor
-      const anchor = cloneDeep(this.state.anchors[slot.parent]);
+      const anchor = cloneDeep(this.state.anchors[slot.parent.id]);
       anchor.children.remove(slot.id);
       anchor.children.push(...slot.children);
 
@@ -588,7 +578,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
       anchor.children.forEach((child) => {
         if (slots[child]) {
-          slots[child].parent = anchor.id;
+          slots[child].parent.id = anchor.id;
         }
       });
 
@@ -603,9 +593,10 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
       this.updateLocalStorage(updatedState);
       this.setState(updatedState);
+      return;
     }
 
-    const parent = cloneDeep(this.state.slots[slot.parent]);
+    const parent = cloneDeep(this.state.slots[slot.parent.id]);
     if (!parent) {
       console.warn(`Failed to remove slot as parent not found.`);
       return;
@@ -617,7 +608,9 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const slots = cloneDeep(this.state.slots);
     delete slots[slot.id];
     parent.children.forEach((child) => {
-      if (slots[child]) slots[child].parent = parent.id;
+      if (slots[child]) {
+        slots[child].parent.id = parent.id;
+      }
     });
     slots[parent.id] = parent;
 
@@ -673,14 +666,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       queuedAbilityId: null,
     };
 
-    console.log('ADD ACTION');
-    console.log({
-      anchorId: updatedState.slots[slotId].anchorId,
-      slotId,
-      groupId,
-      actionId,
-      keybind: this.getBoundKeyValueForAbility(actionId),
-    });
     this.clientAssignSlottedAction(updatedState.slots[slotId].anchorId, slotId, actionId);
 
     this.updateLocalStorage(updatedState);
@@ -872,7 +857,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       angle: 0,
       actionId: -1,
       anchorId,
-      parent: anchorId,
+      parent: { type: ParentType.Anchor, id: anchorId },
       children: [],
     };
 
@@ -994,6 +979,10 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const sortedSlots = Object.values(slots).sort((a, b) => {
       return b.id - a.id;
     });
+
+    if (!sortedSlots[sortedSlots.length - 1]) {
+      return 0;
+    }
 
     return sortedSlots[sortedSlots.length - 1].id + 1;
   }

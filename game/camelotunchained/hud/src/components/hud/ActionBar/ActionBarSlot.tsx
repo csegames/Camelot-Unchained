@@ -265,7 +265,7 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
 
   function onAddSlotClick(e: React.MouseEvent) {
     if (e.button === 0) {
-      actionViewContext.addSlot(props.id);
+      actionViewContext.addSlot(false, props.id);
     }
   }
 
