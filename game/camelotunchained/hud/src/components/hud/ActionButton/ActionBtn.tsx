@@ -10,6 +10,7 @@ import { styled } from '@csegames/linaria/react';
 import { Ability } from 'gql/interfaces';
 import { InnerRing } from './InnerRing';
 import { OuterRing } from './OuterRing';
+import { ContextMenu } from 'shared/ContextMenu';
 
 type ContainerProps = { radius: number; acceptInput: boolean; } & React.HTMLProps<HTMLDivElement>;
 export const Container = styled.div`
@@ -129,6 +130,8 @@ export function AbilityIcon(props: { icon: string }) {
 export interface ActionBtnProps extends Ability {
   keybind: string;
   slotId: number;
+  keybindName: string;
+  getContextMenuItems: () => any[];
   additionalStyles?: React.CSSProperties;
   disableInteractions?: boolean;
 }
@@ -161,20 +164,22 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
     const queued = (abilityState.status & AbilityButtonState.Queued) !== 0;
 
     return (
-      <Container
-        {...display}
-        acceptInput={!this.props.disableInteractions}
-        onMouseDown={this.onClick}
-        style={this.props.additionalStyles}
-        className={this.getErrorClassName()}
-      >
-        <AbilityIcon icon={this.props.icon} />
-        <OverlayShadow />
-        <KeybindInfo>{this.getBoundKeyValueForAbility(this.props.slotId)}</KeybindInfo>
-        <InnerRing {...this.props} abilityState={abilityState} />
-        <OuterRing {...this.props} abilityState={abilityState} />
-        {queued && <QueuedStateTick />}
-      </Container>
+      <ContextMenu type="items" getItems={this.props.getContextMenuItems}>
+        <Container
+          {...display}
+          acceptInput={!this.props.disableInteractions}
+          onClick={this.onClick}
+          style={this.props.additionalStyles}
+          className={this.getErrorClassName()}
+        >
+          <AbilityIcon icon={this.props.icon} />
+          <OverlayShadow />
+          <KeybindInfo>{this.props.keybindName}</KeybindInfo>
+          <InnerRing {...this.props} abilityState={abilityState} />
+          <OuterRing {...this.props} abilityState={abilityState} />
+          {queued && <QueuedStateTick />}
+        </Container>
+      </ContextMenu>
     );
   }
 
@@ -225,15 +230,13 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
     this.setState({ abilityState });
   }
 
-  private onClick = () => {
+  private onClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.button !== 0) {
+      return;
+    }
+
     if (this.props.disableInteractions) return;
     game.actions.activateSlottedAction(this.props.slotId);
-  }
-
-  private getBoundKeyValueForAbility = (slotId: number) => {
-    const keybindsClone = cloneDeep(game.keybinds);
-    const keybind = Object.values(keybindsClone).find(keybind => keybind.description === "Ability " + (slotId + 1));
-    return keybind.binds[0].name;
   }
 }
 

@@ -14,8 +14,7 @@ const Container = styled.div`
 `;
 
 export interface Props {
-  bindingIndex: number;
-  onConfirmBind: (bindingIndex: number, newBind: Binding) => void;
+  onConfirmBind: (newBind: Binding) => void;
   onClose: (result: any) => void;
 }
 
@@ -31,10 +30,10 @@ export class KeybindModal extends React.Component<Props> {
   }
 
   public componentDidMount() {
-    this.startBind(this.props.bindingIndex);
+    this.startBind();
   }
 
-  private startBind = (index: number) => {
+  private startBind = () => {
     this.listenPromise = game.listenForKeyBindingAsync();
     this.listenPromise
       .then(this.onConfirmBind)
@@ -46,7 +45,7 @@ export class KeybindModal extends React.Component<Props> {
   }
 
   private onConfirmBind = (newBind: Binding) => {
-    this.props.onConfirmBind(this.props.bindingIndex, newBind);
+    this.props.onConfirmBind(newBind);
     this.props.onClose('success');
   }
 

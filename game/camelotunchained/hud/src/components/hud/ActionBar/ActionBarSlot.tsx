@@ -134,6 +134,7 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
     wantAngle: props.angle,
     snapStep: 15,
   });
+  const [keybindName, setKeybindName] = useState(getDefaultBoundKeyValue());
 
   const ui = useContext(UIContext);
   const theme = ui.currentTheme();
@@ -164,10 +165,15 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
   const inEditMode = actionViewContext.editMode !== EditMode.Disabled;
   const showEmptySlot = inEditMode && !slottedAction;
 
-  function onConfirmBind(index: number, newBind: Binding) {
-    console.log('AY YO');
-    console.log(index);
-    console.log(newBind);
+  function onConfirmBind(newBind: Binding) {
+    game.actions.assignKeybind(props.id, newBind.value);
+    setKeybindName(newBind.name);
+  }
+
+  function getDefaultBoundKeyValue() {
+    const keybindsClone = cloneDeep(game.keybinds);
+    const keybind = Object.values(keybindsClone).find(keybind => keybind.description === "Ability " + (props.id + 1));
+    return keybind.binds[0].name;
   }
 
   function createContextMenuItems() {
@@ -177,7 +183,7 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
         onSelected: () => {
           showModal({
             render: props => (
-              <KeybindModal bindingIndex={0} onConfirmBind={onConfirmBind} onClose={props.onClose} />
+              <KeybindModal onConfirmBind={onConfirmBind} onClose={props.onClose} />
             ),
             onClose: (key: Binding) => console.log(key.name),
           });
@@ -246,23 +252,27 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
             }}
             onDrop={onDrop}
           >
-            <ContextMenu
-              type='items'
-              getItems={createContextMenuItems}
-            >
-              <BtnWrapper>
-                <ActionBtn
-                  {...slottedAction as any}
-                  disableInteractions={true}
-                  slotId={props.id}
-                  additionalStyles={{
-                    [internalState.isDragging && 'filter']: 'brightness(75%)',
-                  }}
-                />
-              </BtnWrapper>
-            </ContextMenu>
+            <BtnWrapper>
+              <ActionBtn
+                {...slottedAction as any}
+                disableInteractions={true}
+                slotId={props.id}
+                keybindName={keybindName}
+                getContextMenuItems={createContextMenuItems}
+                additionalStyles={{
+                  [internalState.isDragging && 'filter']: 'brightness(75%)',
+                }}
+              />
+            </BtnWrapper>
           </DragAndDrop>
-        ) : <ActionBtn {...slottedAction as any} slotId={props.id} />}
+        ) :
+          <ActionBtn
+            {...slottedAction as any}
+            slotId={props.id}
+            keybindName={keybindName}
+            getContextMenuItems={createContextMenuItems}
+          />
+        }
       </ActionWrapper>
     );
   };
