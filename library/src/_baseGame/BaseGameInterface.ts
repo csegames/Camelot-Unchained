@@ -219,6 +219,8 @@ export interface BaseGameModel {
    * Action Bar API
    */
   actions: ActionBarAPI;
+  onSystemAnchorUpdate: (callback: (anchorId: number, actions: number[]) => void) => EventHandle;
+  onAnchorVisibilityChanged: (callback: (anchorId: number, visible: boolean) => void) => EventHandle;
 }
 
 // Action Bar API

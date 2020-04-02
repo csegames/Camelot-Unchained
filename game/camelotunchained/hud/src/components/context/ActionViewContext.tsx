@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-import { isEqual } from 'lodash';
 
 export const MAX_GROUP_COUNT = 6;
 export const MAX_CHILD_SLOT_COUNT = 4;
@@ -133,8 +132,8 @@ export const ActionViewContext = React.createContext<ActionViewContextState>({
 });
 
 export class ActionViewContextProvider extends React.Component<{}, ContextState> {
-  private evh: EventHandle;
-  private clientAbilitiesCache: ArrayMap<AbilityBarItem>;
+  private abilityBarUpdateEVH: EventHandle;
+  private systemAnchorInitEVH: EventHandle;
   private isInitial: boolean = true;
 
   constructor(props: {}) {
@@ -174,22 +173,27 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
   public componentDidMount() {
     if (camelotunchained.game.abilityBarState.isReady) {
-      this.initializeActionView();
+      const abilitiesArray = Object.values(camelotunchained.game.abilityBarState.abilities);
+      this.initializeActionView(abilitiesArray.map(a => a.id));
     }
 
-    this.evh = camelotunchained.game.abilityBarState.onUpdated(() => {
+    this.abilityBarUpdateEVH = camelotunchained.game.abilityBarState.onUpdated(() => {
       if (this.isInitial) {
-        this.initializeActionView();
-      }
-      if (!this.clientAbilitiesCache ||
-          !isEqual(this.clientAbilitiesCache, camelotunchained.game.abilityBarState.abilities)) {
-        // TODO: New ability bar came in e.g. building - gnna handle this case later
+        const abilitiesArray = Object.values(camelotunchained.game.abilityBarState.abilities);
+        if (abilitiesArray.length === 0) {
+          return;
+        }
+
+        this.initializeActionView(abilitiesArray.map(a => a.id));
       }
     });
+
+    this.systemAnchorInitEVH = game.onSystemAnchorUpdate(this.handleSystemAnchorInitialized);
   }
 
   public componentWillUnmount() {
-    this.evh.clear();
+    this.abilityBarUpdateEVH.clear();
+    this.systemAnchorInitEVH.clear();
   }
 
   private updateLocalStorage = (state: ContextState) => {
@@ -201,11 +205,33 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     localStorage.setItem(ABILITY_BAR_KEY + game.characterID, JSON.stringify(persistedState));
   }
 
-  private initializeActionView = () => {
-    if (Object.keys(camelotunchained.game.abilityBarState.abilities).length === 0) {
+  private handleSystemAnchorInitialized = (anchorId: number, actionIds: number[]) => {
+    if (this.state.anchors[anchorId]) {
+      // Already exists, but check if there are updated actions
       return;
     }
 
+    const { anchors, actions, slots } = this.getInitialCharacterActionView(actionIds);
+    const updatedState: ContextState = {
+      ...this.state,
+      anchors: {
+        ...this.state.anchors,
+        ...anchors,
+      },
+      actions: {
+        ...this.state.actions,
+        ...actions,
+      },
+      slots: {
+        ...this.state.slots,
+        ...slots,
+      }
+    }
+
+    this.setState(updatedState);
+  }
+
+  private initializeActionView = (abilityIds: number[]) => {
     let shouldOverrideLocalStorage = false;
     const cacheAbilityBarVersion = localStorage.getItem(ABILITY_BAR_VERSION_KEY + game.characterID);
     if (!cacheAbilityBarVersion || cacheAbilityBarVersion !== ABILITY_BAR_VERSION) {
@@ -213,7 +239,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       localStorage.setItem(ABILITY_BAR_VERSION_KEY + game.characterID, ABILITY_BAR_VERSION);
     }
 
-    this.clientAbilitiesCache = camelotunchained.game.abilityBarState.abilities;
     let actionViewString = shouldOverrideLocalStorage === false ?
       localStorage.getItem(ABILITY_BAR_KEY + game.characterID) : null;
 
@@ -227,19 +252,17 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     }
 
     if (!actionView) {
-      actionView = this.getInitialCharacterActionView();
+      actionView = this.getInitialCharacterActionView(abilityIds);
       this.updateLocalStorage(actionView);
     }
 
-    console.log('HELLO!');
-    console.log(actionView);
     this.initializeClient(actionView.anchors, actionView.slots, actionView.actions);
 
     this.isInitial = false;
     this.setState({ ...actionView, editMode: EditMode.Disabled });
   }
 
-  private getInitialCharacterActionView = () => {
+  private getInitialCharacterActionView = (abilityIds: number[]) => {
     const anchorId = this.generateAnchorId(this.state.anchors);
     const groupId = this.generateGroupId(anchorId, this.state.anchors);
 
@@ -249,27 +272,25 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     let firstSlotId: number = null;
     let prevSlotId: number = null;
     let nextSlotId: number = null;
-    const abilityBarArray = Object.values(camelotunchained.game.abilityBarState.abilities);
-    abilityBarArray.forEach((ability, i) => {
+    abilityIds.forEach((abilityId, i) => {
       const currentSlotId = nextSlotId ? nextSlotId : this.generateSlotId(slots);
 
-      if (i === abilityBarArray.length - 1) {
+      if (i === abilityIds.length - 1) {
         nextSlotId = null;
       } else {
         nextSlotId = currentSlotId + 1;
       }
 
-      const actionId = ability.id;
       slots[currentSlotId] = {
         id: currentSlotId,
         angle: 0,
         anchorId,
-        actions: [actionId],
+        actions: [abilityId],
         parent: prevSlotId === null ? { type: ParentType.Anchor, id: anchorId } : { type: ParentType.Slot, id: prevSlotId },
         children: nextSlotId ? [nextSlotId] : [],
       };
 
-      actions[ability.id] = [{
+      actions[abilityId] = [{
         group: groupId,
         slot: currentSlotId,
       }]
@@ -960,9 +981,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   }
 
   private clientSetActiveAnchorGroup = (anchorId: number, groupId: number) => {
-    console.log('client set active anchor group');
-    console.log(anchorId);
-    console.log(groupId);
     game.actions.setActiveAnchorGroup(anchorId, groupId);
   }
 

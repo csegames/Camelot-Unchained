@@ -199,7 +199,10 @@ export function initOutOfContextGame(): Partial<BaseGameInterface> {
       activateSlottedAction: noOp,
       clearSlottedAction: noOp,
       removeAnchor: noOp,
-    }
+    },
+
+    onSystemAnchorUpdate: noOp,
+    onAnchorVisibilityChanged: noOp,
   };
 
   return withOverrides({

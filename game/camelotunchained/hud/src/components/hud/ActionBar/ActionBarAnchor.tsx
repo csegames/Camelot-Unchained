@@ -102,6 +102,7 @@ export interface ActionBarAnchorProps extends ActionViewAnchor {
 // tslint:disable-next-line:function-name
 export function ActionBarAnchor(props: ActionBarAnchorProps) {
   const actionViewContext = useContext(ActionViewContext);
+  const [isVisible, setIsVisible] = useState(isSystemAnchorId() ? false : true);
   const [ref, setRef] = useState(null);
   const [bounds, setBounds] = useState({
     width: 0,
@@ -122,6 +123,22 @@ export function ActionBarAnchor(props: ActionBarAnchorProps) {
       setBounds(getBoundsWithChildren(ref));
     }
   }, [ref, inEditMode]);
+
+  useEffect(() => {
+    const handle = game.onAnchorVisibilityChanged((anchorId: number, visible: boolean) => {
+      if (anchorId === props.id) {
+        setIsVisible(visible);
+      }
+    });
+
+    return () => {
+      handle.clear();
+    }
+  });
+
+  function isSystemAnchorId() {
+    return props.id <= -2;
+  }
 
   function handleMouseDown(e: React.MouseEvent) {
 
@@ -190,7 +207,7 @@ export function ActionBarAnchor(props: ActionBarAnchorProps) {
     return items;
   }
 
-  return (
+  return isVisible ? (
     <>
       {inEditMode && (
         <Drag
@@ -257,5 +274,5 @@ export function ActionBarAnchor(props: ActionBarAnchorProps) {
         </ContextMenu>
       </Container>
     </>
-  );
+  ) : null;
 }

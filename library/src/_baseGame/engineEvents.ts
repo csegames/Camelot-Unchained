@@ -91,6 +91,15 @@ export const EE_OnNetworkFailure = 'networkFailure';
 regMap[EE_OnNetworkFailure] = 'onNetworkFailure';
 
 /**
+ * Action Bar API events
+ */
+export const EE_OnSystemAnchorUpdate = 'systemAnchorUpdate';
+regMap[EE_OnSystemAnchorUpdate] = 'onSystemAnchorUpdate';
+
+export const EE_OnAnchorVisibilityChanged = 'anchorVisibilityChanged';
+regMap[EE_OnAnchorVisibilityChanged] = 'onAnchorVisibilityChanged';
+
+/**
  * Initialize engine event forwarding
  */
 export default function() {
