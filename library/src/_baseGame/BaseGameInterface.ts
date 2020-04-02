@@ -225,7 +225,7 @@ export interface BaseGameModel {
 interface ActionBarAPI {
   enterActionBarEditModeAsync: () => CancellablePromise<Success | Failure>;
   exitActionBarEditModeAsync: () => CancellablePromise<Success | Failure>;
-  assignSlottedAction: (slotId: number, anchorId: number, actionId: number) => void;
+  assignSlottedAction: (slotId: number, anchorId: number, groupId: number, actionId: number) => void;
   assignKeybind: (slotId: number, boundKeyValue: number) => void;
 
   setActiveAnchorGroup: (anchorId: number, groupId: number) => void;

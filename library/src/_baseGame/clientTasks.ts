@@ -108,7 +108,7 @@ function handleResult(result: TaskResult) {
 
   if (resolver && !resolver.cancelled) {
     if (result.statusCode === TaskStatus.Success) {
-      resolver.resolve && resolver.resolve({ success: true });
+      resolver.resolve && resolver.resolve({ success: true, ...result.value });
     } else {
       resolver.reject && resolver.reject({ statusCode: result.statusCode, errorMessage: result.reason });
     }

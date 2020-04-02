@@ -11,6 +11,7 @@ import { ActionBtn } from 'hud/ActionButton/ActionBtn';
 import { DragAndDrop, DragEvent } from 'utils/DragAndDropV2';
 import { ContextMenu } from 'shared/ContextMenu';
 import { showModal } from 'utils/DynamicModal';
+import { KeybindModal } from './KeybindModal';
 
 type SCProps = { radius: number; } & React.HTMLProps<HTMLDivElement>;
 const SlotContainer = styled.div`
@@ -163,6 +164,12 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
   const inEditMode = actionViewContext.editMode !== EditMode.Disabled;
   const showEmptySlot = inEditMode && !slottedAction;
 
+  function onConfirmBind(index: number, newBind: Binding) {
+    console.log('AY YO');
+    console.log(index);
+    console.log(newBind);
+  }
+
   function createContextMenuItems() {
     return [
       {
@@ -170,10 +177,7 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
         onSelected: () => {
           showModal({
             render: props => (
-              <div>
-                Hello World!
-                <button onMouseDown={() => props.onClose({ name: 'success', value: 1 })}>close</button>
-              </div>
+              <KeybindModal bindingIndex={0} onConfirmBind={onConfirmBind} onClose={props.onClose} />
             ),
             onClose: (key: Binding) => console.log(key.name),
           });

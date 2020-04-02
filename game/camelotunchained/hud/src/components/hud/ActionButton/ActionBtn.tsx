@@ -227,8 +227,6 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
 
   private onClick = () => {
     if (this.props.disableInteractions) return;
-    console.log('onClick');
-    console.log(this.props.slotId);
     game.actions.activateSlottedAction(this.props.slotId);
   }
 

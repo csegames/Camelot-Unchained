@@ -93,7 +93,7 @@ export interface ActionSlot {
   id: number;
   angle: number;
   anchorId: number;
-  actionId: number;
+  actions: number[];
   parent: { type: ParentType, id: number };
   children: number[];
 }
@@ -231,9 +231,9 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       this.updateLocalStorage(actionView);
     }
 
-    console.log('!@$@!#$!@#$!@#$');
+    console.log('HELLO!');
     console.log(actionView);
-    this.initializeClientSlotAssignments(actionView.slots);
+    this.initializeClient(actionView.anchors, actionView.slots, actionView.actions);
 
     this.isInitial = false;
     this.setState({ ...actionView, editMode: EditMode.Disabled });
@@ -264,7 +264,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         id: currentSlotId,
         angle: 0,
         anchorId,
-        actionId,
+        actions: [actionId],
         parent: prevSlotId === null ? { type: ParentType.Anchor, id: anchorId } : { type: ParentType.Slot, id: prevSlotId },
         children: nextSlotId ? [nextSlotId] : [],
       };
@@ -298,12 +298,22 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     } as ContextState;
   }
 
-  private initializeClientSlotAssignments = async (slots: { [slotId: number]: ActionSlot }) => {
+  private initializeClient = async (anchors: { [anchorId: number]: ActionViewAnchor },
+                                    slots: { [slotId: number]: ActionSlot },
+                                    actions: { [actionId: number]: ActionPosition[] }) => {
     try {
       const res = await game.actions.enterActionBarEditModeAsync();
       if (res.success) {
+        Object.values(anchors).forEach((anchor, i) => {
+          this.clientSetActiveAnchorGroup(anchor.id, anchor.groups[anchor.activeGroupIndex]);
+        });
+
         Object.values(slots).forEach((slot, i) => {
-          this.clientAssignSlottedAction(slot.anchorId, slot.id, slot.actionId);
+          slot.actions.forEach((actionId) => {
+            const action = actions[actionId].find(a => a.slot === slot.id);
+            console.log(JSON.stringify({ slotId: slot.id, anchorId: slot.anchorId, groupId: action.group, actionId }));
+            this.clientAssignSlottedAction(slot.id, slot.anchorId, action.group, actionId);
+          });
         });
         
       } else {
@@ -493,7 +503,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const newSlot: ActionSlot = {
       id: this.generateSlotId(this.state.slots),
       angle: 0,
-      actionId: -1,
+      actions: [],
       anchorId,
       parent: { type: addingToAnchor ? ParentType.Anchor : ParentType.Slot, id: parentId },
       children: [],
@@ -660,13 +670,13 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         ...this.state.slots,
         [slotId]: {
           ...this.state.slots[slotId],
-          actionId,
+          actions: this.state.slots[slotId].actions.concat(actionId),
         },
       },
       queuedAbilityId: null,
     };
 
-    this.clientAssignSlottedAction(updatedState.slots[slotId].anchorId, slotId, actionId);
+    this.clientAssignSlottedAction(slotId, updatedState.slots[slotId].anchorId, groupId, actionId);
 
     this.updateLocalStorage(updatedState);
     this.setState(updatedState);
@@ -765,14 +775,18 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
           ...this.state.slots,
           [target.slotId]: {
             ...this.state.slots[target.slotId],
-            actionId: from.actionId,
+            actions: this.state.slots[target.slotId].actions.concat(from.actionId),
           }
         },
         queuedAbilityId: null,
       };
 
-      console.log('YOYOYO configureSlottedAction');
-      this.clientAssignSlottedAction(updatedState.slots[target.slotId].anchorId, target.slotId, from.actionId);
+      this.clientAssignSlottedAction(
+        target.slotId,
+        updatedState.slots[target.slotId].anchorId,
+        target.groupId,
+        from.actionId,
+      );
 
       this.updateLocalStorage(updatedState);
       this.setState(updatedState);
@@ -804,19 +818,19 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
           [from.slotId]: {
             ...this.state.slots[from.slotId],
             anchorId: this.state.slots[target.slotId].anchorId,
-            actionId: target.actionId,
+            actions: this.state.slots[from.slotId].actions.filter(a => a !== from.actionId).concat(target.actionId),
           },
           [target.slotId]: {
             ...this.state.slots[target.slotId],
             anchorId: this.state.slots[from.slotId].anchorId,
-            actionId: from.actionId,
+            actions: this.state.slots[target.slotId].actions.filter(a => a !== target.actionId).concat(from.actionId),
           }
         },
         queuedAbilityId: null,
       };
 
-      this.clientAssignSlottedAction(this.state.slots[from.slotId].anchorId, from.slotId, target.actionId);
-      this.clientAssignSlottedAction(this.state.slots[target.slotId].anchorId, target.slotId, from.actionId);
+      this.clientAssignSlottedAction(from.slotId, this.state.slots[from.slotId].anchorId, from.groupId, target.actionId);
+      this.clientAssignSlottedAction(target.slotId, this.state.slots[target.slotId].anchorId, target.groupId, from.actionId);
 
       this.updateLocalStorage(updatedState);
       this.setState(updatedState);
@@ -855,7 +869,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const newSlot: ActionSlot = {
       id: this.generateSlotId(this.state.slots),
       angle: 0,
-      actionId: -1,
+      actions: [],
       anchorId,
       parent: { type: ParentType.Anchor, id: anchorId },
       children: [],
@@ -898,18 +912,20 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
     let actionSlotIndex = -1;
     childrenToRemove.forEach((childSlot) => {
-      if (!idIsInvalid(childSlot.actionId)) {
-        // Remove slot from actions map
-        const action = actionsClone[childSlot.actionId];
-        const slotIndex = action.findIndex(a => a.slot === childSlot.id);
-        if (slotIndex !== -1) {
-          actionSlotIndex = slotIndex;
+      childSlot.actions.forEach((actionId) => {
+        if (!idIsInvalid(actionId)) {
+          // Remove slot from actions map
+          const action = actionsClone[actionId];
+          const slotIndex = action.findIndex(a => a.slot === childSlot.id);
+          if (slotIndex !== -1) {
+            actionSlotIndex = slotIndex;
+          }
+  
+          if (actionSlotIndex !== 1) {
+            actionsClone[actionId].splice(actionSlotIndex, 1);
+          }
         }
-
-        if (actionSlotIndex !== 1) {
-          actionsClone[childSlot.actionId].splice(actionSlotIndex, 1);
-        }
-      }
+      });
 
       // Remove slot from slots map
       delete slotsClone[childSlot.id];
@@ -938,8 +954,9 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
   private clientAssignSlottedAction = (slotId: number,
                                           anchorId: number,
+                                          groupId: number,
                                           actionId: number) => {
-    game.actions.assignSlottedAction(slotId, anchorId, actionId);
+    game.actions.assignSlottedAction(slotId, anchorId, groupId, actionId);
   }
 
   private clientSetActiveAnchorGroup = (anchorId: number, groupId: number) => {
