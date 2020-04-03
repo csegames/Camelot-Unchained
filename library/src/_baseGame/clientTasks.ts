@@ -56,15 +56,7 @@ export function makeClientPromise<T>(callFn: (game: BaseDevGameInterface, ...arg
       console.log(`GAME TASK: NEW ACTIVE TASK ${handle.id} cancel=${typeof handle.cancel}`);
     }
 
-    console.log('Make client promise')
-    console.log('handle');
-    console.log(handle);
-    console.log('BEFORE map');
-    console.log(_devGame._activeTasks);
-
     _devGame._activeTasks[handle.id] = handle as Resolvable<T>;
-    console.log('AFTER map');
-    console.log(_devGame._activeTasks);
     const promise =  new Promise<T>((resolve, reject) => {
       if (_devGame._activeTasks[handle.id]) {
         _devGame._activeTasks[handle.id].resolve = resolve;
@@ -100,11 +92,6 @@ function handleResult(result: TaskResult) {
   if (game.debug) {
     console.log(`GAME TASK: RESOLVE TASK ${JSON.stringify(_devGame._activeTasks[result.id])}`);
   }
-
-  console.log('----------------------- ' + result.id + '-------------------');
-  console.log(result);
-  console.log(resolver);
-  console.log(_devGame._activeTasks);
 
   if (resolver && !resolver.cancelled) {
     if (result.statusCode === TaskStatus.Success) {

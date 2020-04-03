@@ -134,6 +134,7 @@ export const ActionViewContext = React.createContext<ActionViewContextState>({
 export class ActionViewContextProvider extends React.Component<{}, ContextState> {
   private abilityBarUpdateEVH: EventHandle;
   private systemAnchorInitEVH: EventHandle;
+  private initializeStateTimeout: number;
   private isInitial: boolean = true;
 
   constructor(props: {}) {
@@ -172,14 +173,12 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   }
 
   public componentDidMount() {
-    if (camelotunchained.game.abilityBarState.isReady) {
-      const abilitiesArray = Object.values(camelotunchained.game.abilityBarState.abilities);
-      this.initializeActionView(abilitiesArray.map(a => a.id));
-    }
+    this.initializeState();
 
     this.abilityBarUpdateEVH = camelotunchained.game.abilityBarState.onUpdated(() => {
       if (this.isInitial) {
-        const abilitiesArray = Object.values(camelotunchained.game.abilityBarState.abilities);
+        const abilitiesArray = cloneDeep(Object.values(camelotunchained.game.abilityBarState.abilities));
+
         if (abilitiesArray.length === 0) {
           return;
         }
@@ -194,6 +193,22 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   public componentWillUnmount() {
     this.abilityBarUpdateEVH.clear();
     this.systemAnchorInitEVH.clear();
+
+    if (this.initializeStateTimeout) {
+      window.clearTimeout(this.initializeStateTimeout);
+    }
+  }
+
+  private initializeState = () => {
+    if (camelotunchained.game.abilityBarState.isReady) {
+      const abilitiesArray = Object.values(camelotunchained.game.abilityBarState.abilities);
+      if (abilitiesArray.length === 0) {
+        this.initializeStateTimeout = window.setTimeout(this.initializeState, 100);
+        return;
+      }
+
+      this.initializeActionView(abilitiesArray.map(a => a.id));
+    }
   }
 
   private updateLocalStorage = (state: ContextState) => {
@@ -332,7 +347,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         Object.values(slots).forEach((slot, i) => {
           slot.actions.forEach((actionId) => {
             const action = actions[actionId].find(a => a.slot === slot.id);
-            console.log(JSON.stringify({ slotId: slot.id, anchorId: slot.anchorId, groupId: action.group, actionId }));
             this.clientAssignSlottedAction(slot.id, slot.anchorId, action.group, actionId);
           });
         });
@@ -350,8 +364,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   private enableActionEditMode = async () => {
     try {
       const res = await game.actions.enterActionBarEditModeAsync();
-      console.log('enableActionEditMode');
-      console.log(res);
       if (res.success) {
         this.setState({ editMode: EditMode.ActionEdit });
       }
@@ -744,7 +756,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       },
     };
 
-    console.log('Removing action');
     game.actions.clearSlottedAction(slotId);
 
     this.updateLocalStorage(updatedState);
@@ -772,7 +783,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       return;
     }
 
-    console.log('YOYOOWOQEROQWER');
     if (idIsInvalid(from.groupId)) {
       // replacing
       const targetPositions = (this.state.actions[target.actionId] || []).slice()
@@ -999,12 +1009,12 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
   }
 
   private generateGroupId = (anchorId: number, anchors: { [anchorId: number]: ActionViewAnchor }): number => {
-    if (!anchors[anchorId]) {
+    if (typeof anchors[anchorId] === 'undefined') {
       return 0;
     }
 
     const sortedGroups = anchors[anchorId].groups.sort((a, b) => {
-      return b - a;
+      return a - b;
     });
 
     return sortedGroups[sortedGroups.length - 1] + 1;
