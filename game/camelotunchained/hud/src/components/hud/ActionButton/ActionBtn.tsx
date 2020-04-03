@@ -5,12 +5,14 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { css } from '@csegames/linaria';
 import { styled } from '@csegames/linaria/react';
 
 import { Ability } from 'gql/interfaces';
 import { InnerRing } from './InnerRing';
 import { OuterRing } from './OuterRing';
-import { ContextMenu } from 'shared/ContextMenu';
+import { Tooltip } from 'shared/Tooltip';
+import { showContextMenu } from 'actions/contextMenu';
 
 type ContainerProps = { radius: number; acceptInput: boolean; } & React.HTMLProps<HTMLDivElement>;
 export const Container = styled.div`
@@ -111,6 +113,24 @@ const QueuedStateTick = styled.div`
   background-size: 90%;
 `;
 
+const TooltipHeader = styled.div`
+  font-size: 22px;
+  font-weight: 700;
+`;
+
+const TooltipContentContainer = styled.div`
+  color: white;
+`;
+
+const DefaultTooltipStyles = {
+  tooltip: css`
+    padding: 2px 5px 5px 5px;
+    min-width: 200px;
+    max-width: 300px;
+    max-height: 750px;
+  `,
+};
+
 export function AbilityIcon(props: { icon: string }) {
   const [icon, setIcon] = useState(props.icon);
 
@@ -164,12 +184,26 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
     const { abilityState } = this.state;
     const queued = (abilityState.status & AbilityButtonState.Queued) !== 0;
 
-    return (
-      <ContextMenu type="items" getItems={this.props.getContextMenuItems}>
+    let tooltipContent = null;
+    if (this.props.icon) {
+      tooltipContent = <TooltipContentContainer>
+        <TooltipHeader>{this.props.name}</TooltipHeader>
+        <div dangerouslySetInnerHTML={{ __html: this.props.description }} />
+      </TooltipContentContainer>;
+    } else {
+      tooltipContent = <TooltipContentContainer>
+        <TooltipHeader>Failed to retrieve data from API server</TooltipHeader>
+      </TooltipContentContainer>;
+    }
+
+    return (  
+      <Tooltip
+        styles={DefaultTooltipStyles}
+        content={tooltipContent}>
         <Container
           {...display}
           acceptInput={!this.props.disableInteractions}
-          onClick={this.onClick}
+          onMouseDown={this.onClick}
           style={this.props.additionalStyles}
           className={this.getErrorClassName()}
         >
@@ -180,7 +214,7 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
           <OuterRing {...this.props} abilityState={abilityState} />
           {queued && <QueuedStateTick />}
         </Container>
-      </ContextMenu>
+      </Tooltip>
     );
   }
 
@@ -232,12 +266,16 @@ class ActionBtnWithInjectedProps extends React.Component<Props, State> {
   }
 
   private onClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.button !== 0) {
-      return;
+    console.log(e.button);
+    if (e.button === 0) {
+      if (this.props.disableInteractions) return;
+      game.actions.activateSlottedAction(this.props.slotId); 
     }
 
-    if (this.props.disableInteractions) return;
-    game.actions.activateSlottedAction(this.props.slotId);
+    if (e.button === 2) {
+      console.log('SHOW CONTEXT MENU');
+      showContextMenu(this.props.getContextMenuItems(), e);
+    }
   }
 }
 
