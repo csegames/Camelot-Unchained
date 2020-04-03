@@ -131,6 +131,7 @@ export interface ActionBtnProps extends Ability {
   keybind: string;
   slotId: number;
   keybindName: string;
+  keybindId: number;
   getContextMenuItems: () => any[];
   additionalStyles?: React.CSSProperties;
   disableInteractions?: boolean;

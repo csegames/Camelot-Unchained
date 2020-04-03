@@ -134,7 +134,10 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
     wantAngle: props.angle,
     snapStep: 15,
   });
-  const [keybindName, setKeybindName] = useState(getDefaultBoundKeyValue());
+
+  const defaultKeybind = getDefaultKeybindId();
+  const [keybindId] = useState(defaultKeybind ? defaultKeybind.id : -1);
+  const [boundKeyName, setBoundKeyName] = useState(defaultKeybind ? defaultKeybind.binds[0].name : '');
 
   const ui = useContext(UIContext);
   const theme = ui.currentTheme();
@@ -167,13 +170,13 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
 
   function onConfirmBind(newBind: Binding) {
     game.actions.assignKeybind(props.id, newBind.value);
-    setKeybindName(newBind.name);
+    setBoundKeyName(newBind.name);
   }
 
-  function getDefaultBoundKeyValue() {
+  function getDefaultKeybindId() {
     const keybindsClone = cloneDeep(game.keybinds);
     const keybind = Object.values(keybindsClone).find(keybind => keybind.description === "Ability " + (props.id + 1));
-    return keybind.binds[0].name;
+    return keybind;
   }
 
   function createContextMenuItems() {
@@ -183,7 +186,7 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
         onSelected: () => {
           showModal({
             render: props => (
-              <KeybindModal onConfirmBind={onConfirmBind} onClose={props.onClose} />
+              <KeybindModal keybindId={keybindId} onConfirmBind={onConfirmBind} onClose={props.onClose} />
             ),
             onClose: (key: Binding) => console.log(key.name),
           });
@@ -257,7 +260,8 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
                 {...slottedAction as any}
                 disableInteractions={true}
                 slotId={props.id}
-                keybindName={keybindName}
+                keybindName={boundKeyName}
+                keybindId={keybindId}
                 getContextMenuItems={createContextMenuItems}
                 additionalStyles={{
                   [internalState.isDragging && 'filter']: 'brightness(75%)',
@@ -269,7 +273,8 @@ export function ActionBarSlot(props: ActionBarSlotProps): JSX.Element {
           <ActionBtn
             {...slottedAction as any}
             slotId={props.id}
-            keybindName={keybindName}
+            keybindName={boundKeyName}
+            keybindId={keybindId}
             getContextMenuItems={createContextMenuItems}
           />
         }
