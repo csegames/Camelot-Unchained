@@ -925,7 +925,9 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
       }
     }
 
-    this.updateLocalStorage(updatedState);
+    console.log('---------------------');
+    console.log(updatedState);
+    // this.updateLocalStorage(updatedState);
     this.setState(updatedState);
   }
 
@@ -996,7 +998,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
   private generateAnchorId = (anchors: { [anchorId: number]: ActionViewAnchor }): number => {
     const sortedAnchors = Object.values(anchors).sort((a, b) => {
-      return b.id - a.id;
+      return a.id - b.id;
     });
 
     const lastAnchor = sortedAnchors[sortedAnchors.length - 1];
@@ -1022,7 +1024,7 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
   private generateSlotId = (slots: { [slotId: number]: ActionSlot }): number => {
     const sortedSlots = Object.values(slots).sort((a, b) => {
-      return b.id - a.id;
+      return a.id - b.id;
     });
 
     if (!sortedSlots[sortedSlots.length - 1]) {
