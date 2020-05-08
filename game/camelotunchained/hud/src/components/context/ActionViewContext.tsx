@@ -96,7 +96,6 @@ export interface ActionSlot {
   id: number;
   angle: number;
   anchorId: number;
-  actions: number[];
   parent: { type: ParentType, id: number };
   children: number[];
 }
@@ -229,6 +228,8 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
   private handleAbilityBarStateUpdate = () => {
     const abilitiesArray = Object.values(camelotunchained.game.abilityBarState.abilities);
+    console.log('handle AbilityBarStateUpdate');
+    console.log(abilitiesArray);
     this.initializeActionView(abilitiesArray);
   }
 
@@ -347,8 +348,8 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const anchorId = systemAnchorId || this.generateAnchorId(this.state.anchors);
     const groupId = this.generateGroupId(anchorId, this.state.anchors);
 
-    const slots: { [slotId: number]: ActionSlot } = actionView ? { ...actionView.slots } : {};
-    const actions: { [actionId: number]: ActionPosition[] } = actionView ? { ...actionView.actions } : {};
+    const slots: { [slotId: string]: ActionSlot } = actionView ? { ...actionView.slots } : {};
+    const actions: { [actionId: string]: ActionPosition[] } = actionView ? { ...actionView.actions } : {};
 
     let firstSlotId: number = null;
     let prevSlotId: number = null;
@@ -366,7 +367,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         id: currentSlotId,
         angle: 0,
         anchorId,
-        actions: [abilityId],
         parent: prevSlotId === null ? { type: ParentType.Anchor, id: anchorId } : { type: ParentType.Slot, id: prevSlotId },
         children: nextSlotId ? [nextSlotId] : [],
       };
@@ -380,6 +380,13 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
       if (firstSlotId == null) {
         firstSlotId = currentSlotId;
+      }
+    });
+
+    Object.keys(actions).forEach((actionId) => {
+      const ability = abilityIds.find(id => id === Number(actionId));
+      if (!ability) {
+        delete actions[actionId];
       }
     });
 
@@ -400,9 +407,9 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     } as ContextState;
   }
 
-  private initializeClient = async (anchors: { [anchorId: number]: ActionViewAnchor },
-                                    slots: { [slotId: number]: ActionSlot },
-                                    actions: { [actionId: number]: ActionPosition[] }) => {
+  private initializeClient = async (anchors: { [anchorId: string]: ActionViewAnchor },
+                                    slots: { [slotId: string]: ActionSlot },
+                                    actions: { [actionId: string]: ActionPosition[] }) => {
     try {
       const res = await game.actions.enterActionBarEditModeAsync();
       if (res.success) {
@@ -412,16 +419,16 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
           }
         });
 
-        Object.values(slots).forEach((slot, i) => {
-          slot.actions.forEach((actionId) => {
-            const action = actions[actionId].find(a => a.slot === slot.id);
+        Object.keys(actions).forEach((actionId) => {
+          actions[actionId].forEach(action => {
+            const slot = slots[action.slot];
             if (!isSystemAnchorId(slot.anchorId)) {
               if (!action) {
                 console.error('There was an action that was undefined');
                 return;
               }
 
-              this.clientAssignSlottedAction(slot.id, slot.anchorId, action.group, actionId);
+              this.clientAssignSlottedAction(slot.id, slot.anchorId, action.group, Number(actionId));
             }
           });
         });
@@ -618,7 +625,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const newSlot: ActionSlot = {
       id: this.generateSlotId(this.state.slots),
       angle: 0,
-      actions: [],
       anchorId,
       parent: { type: addingToAnchor ? ParentType.Anchor : ParentType.Slot, id: parentId },
       children: [],
@@ -781,13 +787,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
         ...this.state.actions,
         [actionId]: positions,
       },
-      slots: {
-        ...this.state.slots,
-        [slotId]: {
-          ...this.state.slots[slotId],
-          actions: this.state.slots[slotId].actions.concat(actionId),
-        },
-      },
       queuedAbilityId: null,
     };
 
@@ -819,17 +818,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
 
     const updatedState: ContextState = {
       ...this.state,
-      slots: {
-        ...this.state.slots,
-        [from.slotId]: {
-          ...this.state.slots[from.slotId],
-          actions: this.state.slots[from.slotId].actions.filter(aId => aId !== actionId),
-        },
-        [target.slotId]: {
-          ...this.state.slots[target.slotId],
-          actions: this.state.slots[target.slotId].actions.concat(actionId),
-        },
-      },
       actions: {
         ...this.state.actions,
         [actionId]: positions,
@@ -900,13 +888,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
           [target.actionId]: targetPositions,
           [from.actionId]: fromPositions,
         },
-        slots: {
-          ...this.state.slots,
-          [target.slotId]: {
-            ...this.state.slots[target.slotId],
-            actions: this.state.slots[target.slotId].actions.concat(from.actionId),
-          }
-        },
         queuedAbilityId: null,
       };
 
@@ -947,12 +928,10 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
           [from.slotId]: {
             ...this.state.slots[from.slotId],
             anchorId: this.state.slots[target.slotId].anchorId,
-            actions: this.state.slots[from.slotId].actions.filter(a => a !== from.actionId).concat(target.actionId),
           },
           [target.slotId]: {
             ...this.state.slots[target.slotId],
             anchorId: this.state.slots[from.slotId].anchorId,
-            actions: this.state.slots[target.slotId].actions.filter(a => a !== target.actionId).concat(from.actionId),
           }
         },
         queuedAbilityId: null,
@@ -1002,7 +981,6 @@ export class ActionViewContextProvider extends React.Component<{}, ContextState>
     const newSlot: ActionSlot = {
       id: this.generateSlotId(this.state.slots),
       angle: 0,
-      actions: [],
       anchorId,
       parent: { type: ParentType.Anchor, id: anchorId },
       children: [],
