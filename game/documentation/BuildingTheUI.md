@@ -3,12 +3,12 @@
 
 
 ### <ins>Prerequisites</ins>
-
+Ensure you have *Node* installed (At the time of writing this documentation)
   
 
 ### <ins>How to build a freshly cloned Camelot Unchained UI Repo</ins>
 
-  
+
 
 #### Step 1: Get yarn
 
