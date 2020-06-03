@@ -21,7 +21,7 @@ declare global {
     duration: number;
     startTime: number;
     name: string;
-    icon: string;
+    iconURL: string;
     description: string;
   }
 }
@@ -330,6 +330,20 @@ declare global {
 }
 
 declare global {
+  export interface MessageOfTheDay {
+    id: string;
+    utcDisplayStart: string;
+    utcDisplayEnd: string;
+    utcCreated: string;
+    title: string;
+    htmlContent: string;
+    jsonContent: string;
+    duration: number;
+    channels: number[];
+  }
+}
+
+declare global {
   export interface PatcherAlert {
     id: string;
     message: string;
@@ -386,33 +400,6 @@ declare global {
     Address: string;
     Bounds: string;
   }
-}
-
-declare global {
-  export interface IAuthActionError {
-    Code: AuthActionErrorCode;
-    Message: string;
-  }
-}
-
-declare global {
-  export interface AuthActionErrorFieldCode {
-    Action: IAuthActionError;
-    Code: FieldCodes;
-    Message: string;
-  }
-}
-
-declare global {
-  type APIClientID = string;
-}
-
-declare global {
-  type APISecret = string;
-}
-
-declare global {
-  type JWTKey = string;
 }
 
 declare global {
@@ -637,6 +624,33 @@ declare global {
     Code: FieldCodes;
     Message: string;
   }
+}
+
+declare global {
+  export interface IAuthActionError {
+    Code: AuthActionErrorCode;
+    Message: string;
+  }
+}
+
+declare global {
+  export interface AuthActionErrorFieldCode {
+    Action: IAuthActionError;
+    Code: FieldCodes;
+    Message: string;
+  }
+}
+
+declare global {
+  type APIClientID = string;
+}
+
+declare global {
+  type APISecret = string;
+}
+
+declare global {
+  type JWTKey = string;
 }
 
 declare global {
@@ -997,58 +1011,60 @@ window.Gender = Gender;
 
 declare global {
   enum Race {
-    PerftestSuperMelee = 20,
-    PerftestBaddie01 = 21,
-    PerftestBaddie02 = 22,
-    PerftestSuperArcher = 23,
-    PerftestHeavyArmor = 24,
-    PerftestMultiStabber = 25,
-    PerftestSpeedy = 26,
-    PerftestGish = 27,
-    PerftestBaddie03 = 28,
-    PerftestBaddie04 = 29,
-    PerftestBaddie05 = 30,
-    PerftestBaddie06 = 31,
-    PerftestBaddie07 = 32,
-    PerftestBaddie08 = 33,
-    PerftestBaddie09 = 34,
-    PerftestBaddie10 = 35,
-    PerftestBaddie11 = 36,
-    PerftestBaddie12 = 37,
-    PerftestBaddie13 = 38,
-    PerftestBaddie14 = 39,
-    PerftestBuddy01 = 40,
-    PerftestBuddy02 = 41,
-    PerftestBaddie15 = 42,
+    Berserker = 20,
+    MindlessDead = 21,
+    DrySkeleton = 22,
+    Amazon = 23,
+    Knight = 24,
+    Celt = 25,
+    Ninja = 26,
+    WinterWind = 27,
+    DishonoredDead = 28,
+    ColossusFrostGiant = 29,
+    ColossusFireGiant = 30,
+    DevourerGiant = 31,
+    CorpseGiant = 32,
+    Necromancer = 33,
+    Litch = 34,
+    Warlock = 35,
+    DeathPriest = 36,
+    PlagueBringer = 37,
+    ShadowWraith = 38,
+    LostSoul = 39,
+    SpectralAlly = 40,
+    SpectralWarrior = 41,
+    BoneReaper = 42,
+    DragonColossus = 43,
   }
   interface Window {
     Race: typeof Race;
   }
 }
 enum Race {
-  PerftestSuperMelee = 20,
-  PerftestBaddie01 = 21,
-  PerftestBaddie02 = 22,
-  PerftestSuperArcher = 23,
-  PerftestHeavyArmor = 24,
-  PerftestMultiStabber = 25,
-  PerftestSpeedy = 26,
-  PerftestGish = 27,
-  PerftestBaddie03 = 28,
-  PerftestBaddie04 = 29,
-  PerftestBaddie05 = 30,
-  PerftestBaddie06 = 31,
-  PerftestBaddie07 = 32,
-  PerftestBaddie08 = 33,
-  PerftestBaddie09 = 34,
-  PerftestBaddie10 = 35,
-  PerftestBaddie11 = 36,
-  PerftestBaddie12 = 37,
-  PerftestBaddie13 = 38,
-  PerftestBaddie14 = 39,
-  PerftestBuddy01 = 40,
-  PerftestBuddy02 = 41,
-  PerftestBaddie15 = 42,
+  Berserker = 20,
+  MindlessDead = 21,
+  DrySkeleton = 22,
+  Amazon = 23,
+  Knight = 24,
+  Celt = 25,
+  Ninja = 26,
+  WinterWind = 27,
+  DishonoredDead = 28,
+  ColossusFrostGiant = 29,
+  ColossusFireGiant = 30,
+  DevourerGiant = 31,
+  CorpseGiant = 32,
+  Necromancer = 33,
+  Litch = 34,
+  Warlock = 35,
+  DeathPriest = 36,
+  PlagueBringer = 37,
+  ShadowWraith = 38,
+  LostSoul = 39,
+  SpectralAlly = 40,
+  SpectralWarrior = 41,
+  BoneReaper = 42,
+  DragonColossus = 43,
 }
 window.Race = Race;
 
@@ -1333,6 +1349,117 @@ enum ServerStatus {
 window.ServerStatus = ServerStatus;
 
 declare global {
+  enum FieldCodes {
+    BasicSuccess = 0,
+    GroupActionSuccess = 1,
+    ModifyVoxJobSuccess = 2,
+    MoveItemSuccess = 3,
+    ProgressionSuccess = 4,
+    ModifySecureTradeSuccess = 5,
+    ModifyPlotSuccess = 6,
+    ModifyItemSuccess = 7,
+    LoginSuccess = 8,
+    ItemActionSuccess = 9,
+    AuthActionSuccess = 10,
+    ModifyAbilitySuccess = 11,
+    ModifyScenarioSuccess = 12,
+    UnspecifiedAuthorizationDenied = 1000,
+    AuthorizationFailed = 1001,
+    LoginTokenAuthorizationFailed = 1002,
+    RealmRestricted = 1003,
+    LoginFailed = 1004,
+    LoginThrottled = 1005,
+    UnspecifiedNotAllowed = 2000,
+    RateLimitExceeded = 2001,
+    InternalAction = 2002,
+    UnspecifiedRequestError = 3000,
+    UnspecifiedExecutionError = 4000,
+    UnhandledExecutionException = 4001,
+    DoesNotExist = 4002,
+    UserStateConflict = 4003,
+    InsufficientResource = 4004,
+    VoxJobError = 4005,
+    MoveItemError = 4006,
+    SecureTradeError = 4007,
+    ProgressionError = 4008,
+    GroupActionError = 4009,
+    TimeoutError = 4010,
+    ModifyItemError = 4011,
+    ItemActionError = 4012,
+    AuthActionError = 4013,
+    ModifyAbilityError = 4014,
+    ModifyScenarioError = 4015,
+    MatchmakingUserNotReady = 4016,
+    MatchmakingUserAlreadyInQueue = 4017,
+    MatchmakingBadGameMode = 4018,
+    MatchmakingFailedToEnterQueue = 4019,
+    DisplayNameError = 4020,
+    UnspecifiedServiceUnavailable = 5000,
+    DatabaseUnavailable = 5001,
+    GroupServiceUnavailable = 5002,
+    GameServiceUnavailable = 5003,
+    PresenceServiceUnavailable = 5004,
+    InvalidModel = 30001,
+  }
+  interface Window {
+    FieldCodes: typeof FieldCodes;
+  }
+}
+enum FieldCodes {
+  BasicSuccess = 0,
+  GroupActionSuccess = 1,
+  ModifyVoxJobSuccess = 2,
+  MoveItemSuccess = 3,
+  ProgressionSuccess = 4,
+  ModifySecureTradeSuccess = 5,
+  ModifyPlotSuccess = 6,
+  ModifyItemSuccess = 7,
+  LoginSuccess = 8,
+  ItemActionSuccess = 9,
+  AuthActionSuccess = 10,
+  ModifyAbilitySuccess = 11,
+  ModifyScenarioSuccess = 12,
+  UnspecifiedAuthorizationDenied = 1000,
+  AuthorizationFailed = 1001,
+  LoginTokenAuthorizationFailed = 1002,
+  RealmRestricted = 1003,
+  LoginFailed = 1004,
+  LoginThrottled = 1005,
+  UnspecifiedNotAllowed = 2000,
+  RateLimitExceeded = 2001,
+  InternalAction = 2002,
+  UnspecifiedRequestError = 3000,
+  UnspecifiedExecutionError = 4000,
+  UnhandledExecutionException = 4001,
+  DoesNotExist = 4002,
+  UserStateConflict = 4003,
+  InsufficientResource = 4004,
+  VoxJobError = 4005,
+  MoveItemError = 4006,
+  SecureTradeError = 4007,
+  ProgressionError = 4008,
+  GroupActionError = 4009,
+  TimeoutError = 4010,
+  ModifyItemError = 4011,
+  ItemActionError = 4012,
+  AuthActionError = 4013,
+  ModifyAbilityError = 4014,
+  ModifyScenarioError = 4015,
+  MatchmakingUserNotReady = 4016,
+  MatchmakingUserAlreadyInQueue = 4017,
+  MatchmakingBadGameMode = 4018,
+  MatchmakingFailedToEnterQueue = 4019,
+  DisplayNameError = 4020,
+  UnspecifiedServiceUnavailable = 5000,
+  DatabaseUnavailable = 5001,
+  GroupServiceUnavailable = 5002,
+  GameServiceUnavailable = 5003,
+  PresenceServiceUnavailable = 5004,
+  InvalidModel = 30001,
+}
+window.FieldCodes = FieldCodes;
+
+declare global {
   enum AuthActionErrorCode {
     Unknown = 0,
     NoActionRequired = 1,
@@ -1455,117 +1582,6 @@ enum APIPermissions {
   All = 2147483647,
 }
 window.APIPermissions = APIPermissions;
-
-declare global {
-  enum FieldCodes {
-    BasicSuccess = 0,
-    GroupActionSuccess = 1,
-    ModifyVoxJobSuccess = 2,
-    MoveItemSuccess = 3,
-    ProgressionSuccess = 4,
-    ModifySecureTradeSuccess = 5,
-    ModifyPlotSuccess = 6,
-    ModifyItemSuccess = 7,
-    LoginSuccess = 8,
-    ItemActionSuccess = 9,
-    AuthActionSuccess = 10,
-    ModifyAbilitySuccess = 11,
-    ModifyScenarioSuccess = 12,
-    UnspecifiedAuthorizationDenied = 1000,
-    AuthorizationFailed = 1001,
-    LoginTokenAuthorizationFailed = 1002,
-    RealmRestricted = 1003,
-    LoginFailed = 1004,
-    LoginThrottled = 1005,
-    UnspecifiedNotAllowed = 2000,
-    RateLimitExceeded = 2001,
-    InternalAction = 2002,
-    UnspecifiedRequestError = 3000,
-    UnspecifiedExecutionError = 4000,
-    UnhandledExecutionException = 4001,
-    DoesNotExist = 4002,
-    UserStateConflict = 4003,
-    InsufficientResource = 4004,
-    VoxJobError = 4005,
-    MoveItemError = 4006,
-    SecureTradeError = 4007,
-    ProgressionError = 4008,
-    GroupActionError = 4009,
-    TimeoutError = 4010,
-    ModifyItemError = 4011,
-    ItemActionError = 4012,
-    AuthActionError = 4013,
-    ModifyAbilityError = 4014,
-    ModifyScenarioError = 4015,
-    MatchmakingUserNotReady = 4016,
-    MatchmakingUserAlreadyInQueue = 4017,
-    MatchmakingBadGameMode = 4018,
-    MatchmakingFailedToEnterQueue = 4019,
-    DisplayNameError = 4020,
-    UnspecifiedServiceUnavailable = 5000,
-    DatabaseUnavailable = 5001,
-    GroupServiceUnavailable = 5002,
-    GameServiceUnavailable = 5003,
-    PresenceServiceUnavailable = 5004,
-    InvalidModel = 30001,
-  }
-  interface Window {
-    FieldCodes: typeof FieldCodes;
-  }
-}
-enum FieldCodes {
-  BasicSuccess = 0,
-  GroupActionSuccess = 1,
-  ModifyVoxJobSuccess = 2,
-  MoveItemSuccess = 3,
-  ProgressionSuccess = 4,
-  ModifySecureTradeSuccess = 5,
-  ModifyPlotSuccess = 6,
-  ModifyItemSuccess = 7,
-  LoginSuccess = 8,
-  ItemActionSuccess = 9,
-  AuthActionSuccess = 10,
-  ModifyAbilitySuccess = 11,
-  ModifyScenarioSuccess = 12,
-  UnspecifiedAuthorizationDenied = 1000,
-  AuthorizationFailed = 1001,
-  LoginTokenAuthorizationFailed = 1002,
-  RealmRestricted = 1003,
-  LoginFailed = 1004,
-  LoginThrottled = 1005,
-  UnspecifiedNotAllowed = 2000,
-  RateLimitExceeded = 2001,
-  InternalAction = 2002,
-  UnspecifiedRequestError = 3000,
-  UnspecifiedExecutionError = 4000,
-  UnhandledExecutionException = 4001,
-  DoesNotExist = 4002,
-  UserStateConflict = 4003,
-  InsufficientResource = 4004,
-  VoxJobError = 4005,
-  MoveItemError = 4006,
-  SecureTradeError = 4007,
-  ProgressionError = 4008,
-  GroupActionError = 4009,
-  TimeoutError = 4010,
-  ModifyItemError = 4011,
-  ItemActionError = 4012,
-  AuthActionError = 4013,
-  ModifyAbilityError = 4014,
-  ModifyScenarioError = 4015,
-  MatchmakingUserNotReady = 4016,
-  MatchmakingUserAlreadyInQueue = 4017,
-  MatchmakingBadGameMode = 4018,
-  MatchmakingFailedToEnterQueue = 4019,
-  DisplayNameError = 4020,
-  UnspecifiedServiceUnavailable = 5000,
-  DatabaseUnavailable = 5001,
-  GroupServiceUnavailable = 5002,
-  GameServiceUnavailable = 5003,
-  PresenceServiceUnavailable = 5004,
-  InvalidModel = 30001,
-}
-window.FieldCodes = FieldCodes;
 
 export const ChampionAPI = {
   SelectChampion: function(config: RequestConfig, request: Partial<SelectChampionRequest>): Promise<RequestResult> {

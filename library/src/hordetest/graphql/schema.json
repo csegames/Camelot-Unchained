@@ -1772,7 +1772,7 @@
               "deprecationReason": null
             },
             {
-              "name": "icon",
+              "name": "iconURL",
               "description": "",
               "args": [],
               "type": {
@@ -1957,20 +1957,20 @@
           "interfaces": null,
           "enumValues": [
             {
-              "name": "PerftestSuperMelee",
-              "description": "PerftestSuperMelee",
+              "name": "Berserker",
+              "description": "Berserker",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestSuperArcher",
-              "description": "PerftestSuperArcher",
+              "name": "Amazon",
+              "description": "Amazon",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestMultiStabber",
-              "description": "PerftestMultiStabber",
+              "name": "Celt",
+              "description": "Celt",
               "isDeprecated": false,
               "deprecationReason": null
             }
@@ -2033,140 +2033,146 @@
           "interfaces": null,
           "enumValues": [
             {
-              "name": "PerftestSuperMelee",
-              "description": "PerftestSuperMelee",
+              "name": "Berserker",
+              "description": "Berserker",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie01",
-              "description": "PerftestBaddie01",
+              "name": "MindlessDead",
+              "description": "MindlessDead",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie02",
-              "description": "PerftestBaddie02",
+              "name": "DrySkeleton",
+              "description": "DrySkeleton",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestSuperArcher",
-              "description": "PerftestSuperArcher",
+              "name": "Amazon",
+              "description": "Amazon",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestHeavyArmor",
-              "description": "PerftestHeavyArmor",
+              "name": "Knight",
+              "description": "Knight",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestMultiStabber",
-              "description": "PerftestMultiStabber",
+              "name": "Celt",
+              "description": "Celt",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestSpeedy",
-              "description": "PerftestSpeedy",
+              "name": "Ninja",
+              "description": "Ninja",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestGish",
-              "description": "PerftestGish",
+              "name": "WinterWind",
+              "description": "WinterWind",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie03",
-              "description": "PerftestBaddie03",
+              "name": "DishonoredDead",
+              "description": "DishonoredDead",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie04",
-              "description": "PerftestBaddie04",
+              "name": "ColossusFrostGiant",
+              "description": "ColossusFrostGiant",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie05",
-              "description": "PerftestBaddie05",
+              "name": "ColossusFireGiant",
+              "description": "ColossusFireGiant",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie06",
-              "description": "PerftestBaddie06",
+              "name": "DevourerGiant",
+              "description": "DevourerGiant",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie07",
-              "description": "PerftestBaddie07",
+              "name": "CorpseGiant",
+              "description": "CorpseGiant",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie08",
-              "description": "PerftestBaddie08",
+              "name": "Necromancer",
+              "description": "Necromancer",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie09",
-              "description": "PerftestBaddie09",
+              "name": "Litch",
+              "description": "Litch",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie10",
-              "description": "PerftestBaddie10",
+              "name": "Warlock",
+              "description": "Warlock",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie11",
-              "description": "PerftestBaddie11",
+              "name": "DeathPriest",
+              "description": "DeathPriest",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie12",
-              "description": "PerftestBaddie12",
+              "name": "PlagueBringer",
+              "description": "PlagueBringer",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie13",
-              "description": "PerftestBaddie13",
+              "name": "ShadowWraith",
+              "description": "ShadowWraith",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie14",
-              "description": "PerftestBaddie14",
+              "name": "LostSoul",
+              "description": "LostSoul",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBuddy01",
-              "description": "PerftestBuddy01",
+              "name": "SpectralAlly",
+              "description": "SpectralAlly",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBuddy02",
-              "description": "PerftestBuddy02",
+              "name": "SpectralWarrior",
+              "description": "SpectralWarrior",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "PerftestBaddie15",
-              "description": "PerftestBaddie15",
+              "name": "BoneReaper",
+              "description": "BoneReaper",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "DragonColossus",
+              "description": "DragonColossus",
               "isDeprecated": false,
               "deprecationReason": null
             }
@@ -5083,6 +5089,53 @@
           "fields": null,
           "inputFields": null,
           "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Euler3f",
+          "description": "CU.GraphQL.Euler3fGQL",
+          "fields": [
+            {
+              "name": "pitch",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Decimal",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "roll",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Decimal",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "yaw",
+              "description": "",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Decimal",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null
         },

@@ -450,7 +450,7 @@ export interface Vec3f {
 export interface StatusEffect {
   description: string | null;
   duration: Decimal | null;
-  icon: string | null;
+  iconURL: string | null;
   id: string | null;
   name: string | null;
   startTime: Decimal | null;
@@ -697,6 +697,12 @@ export interface Group extends IGroup {
   membersAsString: (string | null)[] | null;
   shard: ShardID | null;
 }
+/** CU.GraphQL.Euler3fGQL */
+export interface Euler3f {
+  pitch: Decimal | null;
+  roll: Decimal | null;
+  yaw: Decimal | null;
+}
 /** CU.Databases.ColorRGBA */
 export interface ColorRGBA {
   a: Decimal | null;
@@ -923,9 +929,9 @@ export enum PatchPermissions {
 }
 /** CU.Archetype */
 export enum Archetype {
-  PerftestSuperMelee = "PerftestSuperMelee",
-  PerftestSuperArcher = "PerftestSuperArcher",
-  PerftestMultiStabber = "PerftestMultiStabber"
+  Berserker = "Berserker",
+  Amazon = "Amazon",
+  Celt = "Celt"
 }
 /** CU.Gender */
 export enum Gender {
@@ -935,29 +941,30 @@ export enum Gender {
 }
 /** CU.Race */
 export enum Race {
-  PerftestSuperMelee = "PerftestSuperMelee",
-  PerftestBaddie01 = "PerftestBaddie01",
-  PerftestBaddie02 = "PerftestBaddie02",
-  PerftestSuperArcher = "PerftestSuperArcher",
-  PerftestHeavyArmor = "PerftestHeavyArmor",
-  PerftestMultiStabber = "PerftestMultiStabber",
-  PerftestSpeedy = "PerftestSpeedy",
-  PerftestGish = "PerftestGish",
-  PerftestBaddie03 = "PerftestBaddie03",
-  PerftestBaddie04 = "PerftestBaddie04",
-  PerftestBaddie05 = "PerftestBaddie05",
-  PerftestBaddie06 = "PerftestBaddie06",
-  PerftestBaddie07 = "PerftestBaddie07",
-  PerftestBaddie08 = "PerftestBaddie08",
-  PerftestBaddie09 = "PerftestBaddie09",
-  PerftestBaddie10 = "PerftestBaddie10",
-  PerftestBaddie11 = "PerftestBaddie11",
-  PerftestBaddie12 = "PerftestBaddie12",
-  PerftestBaddie13 = "PerftestBaddie13",
-  PerftestBaddie14 = "PerftestBaddie14",
-  PerftestBuddy01 = "PerftestBuddy01",
-  PerftestBuddy02 = "PerftestBuddy02",
-  PerftestBaddie15 = "PerftestBaddie15"
+  Berserker = "Berserker",
+  MindlessDead = "MindlessDead",
+  DrySkeleton = "DrySkeleton",
+  Amazon = "Amazon",
+  Knight = "Knight",
+  Celt = "Celt",
+  Ninja = "Ninja",
+  WinterWind = "WinterWind",
+  DishonoredDead = "DishonoredDead",
+  ColossusFrostGiant = "ColossusFrostGiant",
+  ColossusFireGiant = "ColossusFireGiant",
+  DevourerGiant = "DevourerGiant",
+  CorpseGiant = "CorpseGiant",
+  Necromancer = "Necromancer",
+  Litch = "Litch",
+  Warlock = "Warlock",
+  DeathPriest = "DeathPriest",
+  PlagueBringer = "PlagueBringer",
+  ShadowWraith = "ShadowWraith",
+  LostSoul = "LostSoul",
+  SpectralAlly = "SpectralAlly",
+  SpectralWarrior = "SpectralWarrior",
+  BoneReaper = "BoneReaper",
+  DragonColossus = "DragonColossus"
 }
 /** AccessType */
 export enum AccessType {
