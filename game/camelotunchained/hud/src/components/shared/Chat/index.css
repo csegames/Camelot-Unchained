@@ -4,7 +4,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-// escapsulates all css so we don't bleed out of the feComponentTransfer
 .cse-chat {
   /* Cover Background */
   width: 100%;
@@ -16,6 +15,6 @@
   overflow: hidden;
   position: relative;
   pointer-events: all;
-  
-  @import './sass/main';
 }
+
+@import './css/_main.css';

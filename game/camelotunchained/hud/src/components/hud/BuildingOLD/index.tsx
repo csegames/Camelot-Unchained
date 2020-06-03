@@ -13,6 +13,7 @@ import reducer from './services/session/reducer';
 import { initializeBuilding } from './services/session/building';
 import { initializeSelections } from './services/session/selection';
 import App from './components/BuildingApp';
+import './index.scss';
 
 const store = createStore(reducer, applyMiddleware(thunk));
 
