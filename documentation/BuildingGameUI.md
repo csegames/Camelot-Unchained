@@ -20,7 +20,7 @@ Ensure you have *Node* installed (At the time of writing this documentation)
 
 3. Ensure you have yarn installed on your computer by entering `yarn -v`
 
-  
+
 
 #### Step 2: Setup *library*
 
